@@ -1,54 +1,57 @@
 /*! @file
  *
- *  @brief I/O routines for UART communications on the TWR-K70F120M.
+ *  @brief Routines to implement a FIFO buffer.
  *
- *  This contains the functions for operating the UART (serial port).
- *
- *  @author PMcL
+ *  @author Mohammad Yasin Azimi [11733490], Micheal Codner [11989668]
  *  @date 2015-07-23
+ */
+/*!
+ ** @addtogroup uart_module UART module documentation
+ ** @{
  */
 
 // new types
 #include "UART.h"
+#include "MK70F12.h"
 
-/*! @brief Sets up the UART interface before first use.
- *
- *  @param baudRate The desired baud rate in bits/sec.
- *  @param moduleClk The module clock rate in Hz
- *  @return BOOL - TRUE if the UART was successfully initialized.
- */
+
 BOOL UART_Init(const uint32_t baudRate, const uint32_t moduleClk)
 {
+  // UART setup
+
+  SIM_SCGC4 |= SIM_SCGC4_UART2_MASK;	// Enable system clock gate for UART2
+  SIM_SCGC5 |= SIM_SCGC5_UART2_MASK;	// Enable system clock gate for PORTE
+  PORTE_PCR16 |= PORT_PCR_MUX(3);	// Set pin control register 16 PORTE bits 8 and 9, to enable MUX alternative 3 (Transmitter)
+  PORTE_PCR17 |= PORT_PCR_MUX(3);	// Set pin control register 17 PORTE bits 8 and 9, to enable MUX alternative 3 (Receiver)
+  UART2_C1 = 0;				// Clears UART2 control register 1
+  UART2_C2 |= UART_C2_TE_MASK;		// Enable UART2 for Transmit
+  UART2_C2 |= UART_C2_RE_MASK;		// Enable UART2 for Receive
+
+  // Requested Baud Rate setup
+
+  uint16_t setting  = (uint16_t)(moduleClk/(baudRate * 16));	// Setting the baud rate which is synchronized with the module clock
+  uint8_t setting_high = (setting & 0x1F00) >> 8;		// Setting the the upper 8 bits of the modulus counter
+  uint8_t setting_low = (setting & 0xFF);			// Masked to get lower 8 bits of the baud rate
+  // Updating the 13-bit baud rate setting
+  UART2_BDH = (UART2_BDH & 0XC0) | (setting_high & 0x1F);	// Buffers the high half of the new value
+  UART2_BDL = setting_low;					// Reset to a nonzero value
+
 
 }
 
-/*! @brief Get a character from the receive FIFO if it is not empty.
- *
- *  @param dataPtr A pointer to memory to store the retrieved byte.
- *  @return BOOL - TRUE if the receive FIFO returned a character.
- *  @note Assumes that UART_Init has been called.
- */
+
 BOOL UART_InChar(uint8_t * const dataPtr)
 {
 
 }
 
-/*! @brief Put a byte in the transmit FIFO if it is not full.
- *
- *  @param data The byte to be placed in the transmit FIFO.
- *  @return BOOL - TRUE if the data was placed in the transmit FIFO.
- *  @note Assumes that UART_Init has been called.
- */
+
 BOOL UART_OutChar(const uint8_t data)
 {
 
 }
 
-/*! @brief Poll the UART status register to try and receive and/or transmit one character.
- *
- *  @return void
- *  @note Assumes that UART_Init has been called.
- */
+
 void UART_Poll(void)
 {
 
