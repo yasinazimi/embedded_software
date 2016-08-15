@@ -29,44 +29,91 @@
 
 // CPU mpdule - contains low level hardware initialization routines
 #include "Cpu.h"
-#include "FIFO.h"
+#include "packet.h"
+#include "UART.h"
+#include "cmd.h"
 
-static TFIFO TxFIFO, RxFIFO;
+#include "PE_Types.h"
+#include "PE_Error.h"
+#include "PE_Const.h"
+#include "IO_Map.h"
 
+
+const uint32_t BAUD_RATE = 38400;
+const uint32_t MODULE_CLOCK = CPU_BUS_CLK_HZ;
+
+// Acknowledgment bit mask
+const uint8_t PACKET_ACK_MASK = 0x80;
+
+void Packet_Handle()
+{
+  BOOL error = bTRUE;
+  //mask out the ack, otherwise it goes to default
+  switch(Packet_Command & ~PACKET_ACK_MASK)
+  {
+    case CMD_RX_GET_SPECIAL_START_VAL:
+      Send_Startup();
+      Send_Special_Tower_Version();
+      Send_Tower_Number();
+      error = bFALSE;
+      break;
+    case CMD_RX_GET_VERSION:
+      Send_Special_Tower_Version();
+      error = bFALSE;
+      break;
+    case CMD_RX_TOWER_NUMBER:
+      if (Packet_Parameter1 == CMD_TOWER_NUMBER_GET)
+      {
+	Send_Tower_Number();
+      }
+      else if (Packet_Parameter1 == CMD_TOWER_NUMBER_SET)
+      {
+	Receive_Tower_Number(Packet_Parameter2, Packet_Parameter3);
+      }
+      error = bFALSE;
+      break;
+    default:
+      break;
+  }
+  if (Packet_Command & PACKET_ACK_MASK)
+    {
+      uint8_t maskedPacket = 0;
+      if (error == bTRUE)
+      {
+	maskedPacket = Packet_Command & ~PACKET_ACK_MASK;
+      }
+      else
+      {
+	maskedPacket = Packet_Command | PACKET_ACK_MASK;
+      }
+      Packet_Put(maskedPacket, Packet_Parameter1, Packet_Parameter2, Packet_Parameter3);
+  }
+}
 
 /*lint -save  -e970 Disable MISRA rule (6.3) checking. */
 int main(void)
 /*lint -restore Enable MISRA rule (6.3) checking. */
 {
   /* Write your local variable definition here */
-  uint8_t test;
-  BOOL success;
 
   /*** Processor Expert internal initialization. DON'T REMOVE THIS CODE!!! ***/
   PE_low_level_init();
   /*** End of Processor Expert internal initialization.                    ***/
 
   /* Write your code here */
-  FIFO_Init(&TxFIFO);
+  Packet_Init(BAUD_RATE, MODULE_CLOCK);
 
-  success = FIFO_Put(&TxFIFO, 'H');
-  success = FIFO_Put(&TxFIFO, 'e');
-  success = FIFO_Put(&TxFIFO, 'l');
-  success = FIFO_Put(&TxFIFO, 'l');
-  success = FIFO_Put(&TxFIFO, 'o');
-
-  // should return true
-  success = FIFO_Get(&TxFIFO, &test);
-  success = FIFO_Get(&TxFIFO, &test);
-  success = FIFO_Get(&TxFIFO, &test);
-  success = FIFO_Get(&TxFIFO, &test);
-  success = FIFO_Get(&TxFIFO, &test);
-  // should return false
-  success = FIFO_Get(&TxFIFO, &test);
+  Send_Startup();
+  Send_Special_Tower_Version();
+  Send_Tower_Number();
 
   for (;;)
   {
-
+      UART_Poll();
+      if (Packet_Get())
+      {
+	  Packet_Handle();
+      }
   }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

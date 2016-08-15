@@ -4,8 +4,8 @@
  *
  *  This contains the structure and "methods" for accessing a byte-wide FIFO.
  *
- *  @author PMcL
- *  @date 2015-07-23
+ *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
+ *  @date 03-08-2016
  */
 
 #ifndef FIFO_H

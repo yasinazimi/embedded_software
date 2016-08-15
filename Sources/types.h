@@ -4,8 +4,8 @@
  *
  *  This contains types that are especially useful for the Tower to PC Protocol.
  *
- *  @author PMcL
- *  @date 2015-07-23
+ *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
+ *  @date 03-08-2016
  */
 
 #ifndef TYPES_H

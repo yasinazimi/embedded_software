@@ -6,18 +6,21 @@
 C_SRCS += \
 ../Sources/FIFO.c \
 ../Sources/UART.c \
+../Sources/cmd.c \
 ../Sources/main.c \
 ../Sources/packet.c 
 
 OBJS += \
 ./Sources/FIFO.o \
 ./Sources/UART.o \
+./Sources/cmd.o \
 ./Sources/main.o \
 ./Sources/packet.o 
 
 C_DEPS += \
 ./Sources/FIFO.d \
 ./Sources/UART.d \
+./Sources/cmd.d \
 ./Sources/main.d \
 ./Sources/packet.d 
 
@@ -26,7 +29,7 @@ C_DEPS += \
 Sources/%.o: ../Sources/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross ARM C Compiler'
-	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -I"D:/48434 Embedded Software/Lab1/Static_Code/PDD" -I"D:/48434 Embedded Software/Lab1/Static_Code/IO_Map" -I"D:/48434 Embedded Software/Lab1/Sources" -I"D:/48434 Embedded Software/Lab1/Generated_Code" -std=c99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
+	arm-none-eabi-gcc -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -I"D:/svn/Static_Code/PDD" -I"D:/svn/Static_Code/IO_Map" -I"D:/svn/Sources" -I"D:/svn/Generated_Code" -std=c99 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" -c -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

@@ -10,6 +10,9 @@ RM := rm -rf
 -include sources.mk
 -include Sources/subdir.mk
 -include Project_Settings/Startup_Code/subdir.mk
+-include Lab1/Debug/Sources/subdir.mk
+-include Lab1/Debug/Project_Settings/Startup_Code/subdir.mk
+-include Lab1/Debug/Generated_Code/subdir.mk
 -include Generated_Code/subdir.mk
 -include subdir.mk
 -include objects.mk
@@ -52,7 +55,7 @@ all: Lab1.elf secondary-outputs
 Lab1.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross ARM C++ Linker'
-	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "D:/48434 Embedded Software/Lab1/Project_Settings/Linker_Files/ProcessorExpert.ld" -Xlinker --gc-sections -L"D:/48434 Embedded Software/Lab1/Project_Settings/Linker_Files" -Wl,-Map,"Lab1.map" -specs=nano.specs -specs=nosys.specs -o "Lab1.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-g++ -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -O0 -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  -g3 -T "D:/svn/Project_Settings/Linker_Files/ProcessorExpert.ld" -Xlinker --gc-sections -L"D:/svn/Project_Settings/Linker_Files" -Wl,-Map,"Lab1.map" -specs=nano.specs -specs=nosys.specs -o "Lab1.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

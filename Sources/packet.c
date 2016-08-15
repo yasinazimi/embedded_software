@@ -1,50 +1,94 @@
 /*! @file
  *
- *  @brief Routines to implement packet encoding and decoding for the serial port.
+ *  @brief Routines to implement packet encoding/decoding for serial port
  *
- *  This contains the functions for implementing the "Tower to PC Protocol" 5-byte packets.
+ *  Implementation of the packet module, handles 5 bytes packets at each state of the check-sum
  *
- *  @author PMcL
- *  @date 2015-07-23
+ *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
+ *  @date 03-08-2016
+ */
+/*!
+ ** @addtogroup packet_module Packet module documentation
+ ** @{
  */
 
 // new types
 #include "packet.h"
 
+#include "UART.h"
+
+uint8_t packet_position = 0;	// Setting the initial position of the packet
+
+uint8_t packet_checksum;	// Declaring the checksum
+
 // Packet structure
-extern uint8_t 	Packet_Command,		/*!< The packet's command */
-		Packet_Parameter1, 	/*!< The packet's 1st parameter */
-		Packet_Parameter2, 	/*!< The packet's 2nd parameter */
-		Packet_Parameter3;	/*!< The packet's 3rdt parameter */
+uint8_t Packet_Command,		/*!< The packet's command */
+	Packet_Parameter1, 	/*!< The packet's 1st parameter */
+	Packet_Parameter2, 	/*!< The packet's 2nd parameter */
+	Packet_Parameter3;	/*!< The packet's 3rdt parameter */
 
-// Acknowledgement bit mask
-extern const uint8_t PACKET_ACK_MASK;
+uint8_t PacketTest() {
+  uint8_t calc_checksum = Packet_Command ^ Packet_Parameter1 ^ Packet_Parameter2 ^ Packet_Parameter3;
+  uint8_t ret_val = calc_checksum == packet_checksum;
+}
 
-/*! @brief Initializes the packets by calling the initialization routines of the supporting software modules.
- *
- *  @param baudRate The desired baud rate in bits/sec.
- *  @param moduleClk The module clock rate in Hz
- *  @return BOOL - TRUE if the packet module was successfully initialized.
- */
 BOOL Packet_Init(const uint32_t baudRate, const uint32_t moduleClk)
 {
-
+  // Initialization of the BD
+  UART_Init(baudRate, moduleClk);
 }
 
-/*! @brief Attempts to get a packet from the received data.
- *
- *  @return BOOL - TRUE if a valid packet was received.
- */
+
 BOOL Packet_Get(void)
 {
+  uint8_t uartData;
+  if (!UART_InChar(&uartData))
+  {
+    return bFALSE;
+  }
 
+  switch (packet_position) {
+    case 0:
+      Packet_Command = uartData;
+      packet_position++;
+      return bFALSE;
+    case 1:
+      Packet_Parameter1 = uartData;
+      packet_position++;
+      return bFALSE;
+    case 2:
+      Packet_Parameter2 = uartData;
+      packet_position++;
+      return bFALSE;
+    case 3:
+      Packet_Parameter3 = uartData;
+      packet_position++;
+      return bFALSE;
+    case 4:
+      packet_checksum = uartData;
+      if (PacketTest())
+      {
+	packet_position = 0;
+	return bTRUE;
+      }
+      Packet_Command = Packet_Parameter1;
+      Packet_Parameter1 = Packet_Parameter2;
+      Packet_Parameter2 = Packet_Parameter3;
+      Packet_Parameter3 = packet_checksum;
+      return bFALSE;
+  }
 }
 
-/*! @brief Builds a packet and places it in the transmit FIFO buffer.
- *
- *  @return BOOL - TRUE if a valid packet was sent.
- */
+
 BOOL Packet_Put(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
 {
-
+  UART_OutChar(command);
+  UART_OutChar(parameter1);
+  UART_OutChar(parameter2);
+  UART_OutChar(parameter3);
+  UART_OutChar(command ^ parameter1 ^ parameter2 ^ parameter3);
 }
+
+/*!
+** @}
+*/

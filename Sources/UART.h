@@ -1,11 +1,11 @@
 /*! @file
  *
- *  @brief I/O routines for UART communications on the TWR-K70F120M.
+ *  @brief I/O routines for UART communications on the TWR-K70F120M
  *
- *  This contains the functions for operating the UART (serial port).
+ *  This contains the functions for operating the UART (serial port)
  *
- *  @author PMcL
- *  @date 2015-07-23
+ *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
+ *  @date 03-08-2016
  */
 
 #ifndef UART_H
@@ -13,6 +13,11 @@
 
 // new types
 #include "types.h"
+
+#include "FIFO.h"
+
+// Initializing FIFO
+TFIFO RxFIFO, TxFIFO;
 
 /*! @brief Sets up the UART interface before first use.
  *
