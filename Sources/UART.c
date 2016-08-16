@@ -25,9 +25,38 @@ BOOL UART_Init(const uint32_t baudRate, const uint32_t moduleClk)
   SIM_SCGC5 |= SIM_SCGC5_PORTE_MASK;	// Enable system clock gate for PORTE
   PORTE_PCR16 |= PORT_PCR_MUX(3);	// Set pin control register 16 PORTE bits 8 and 9, to enable MUX alternative 3 (Transmitter)
   PORTE_PCR17 |= PORT_PCR_MUX(3);	// Set pin control register 17 PORTE bits 8 and 9, to enable MUX alternative 3 (Receiver)
-  UART2_C1 = 0;				// Clears UART2 control register 1
-  UART2_C2 |= UART_C2_TE_MASK;		// Enable UART2 for Transmit
-  UART2_C2 |= UART_C2_RE_MASK;		// Enable UART2 for Receive
+
+
+  //ENABLING C1 CONTROL REGISTERS
+    /*
+     ** In this section we need to set or clear each bit in each register
+     ** of the UART. See page 1910 for the C1 explanation.
+     ** EXAMPLE:
+     ** UART_C1 &= ~UART_C1_PT_MASK;  this is a 0
+     ** UART_C1 |= UART_C1_PT_MASK;  this is a 1
+     **
+     */
+
+    UART2_C1 &= ~UART_C1_PT_MASK; 	// Disabled
+    UART2_C1 &= ~UART_C1_PE_MASK; 	// Disabled
+    UART2_C1 &= ~UART_C1_ILT_MASK;	// Disabled
+    UART2_C1 &= ~UART_C1_WAKE_MASK; 	// Disabled
+    UART2_C1 &= ~UART_C1_M_MASK;        // Disabled
+    UART2_C1 &= ~UART_C1_RSRC_MASK; 	// Disabled
+    UART2_C1 &= ~UART_C1_UARTSWAI_MASK; // Disabled
+    UART2_C1 &= ~UART_C1_LOOPS_MASK; 	// Disabled
+
+    //ENABLING C2 CONTROL REGISTERS
+    UART2_C2 &= ~ UART_C2_SBK_MASK; 	// Disabled
+    UART2_C2 &= ~ UART_C2_RWU_MASK; 	// Disabled
+    UART2_C2 |= UART_C2_RE_MASK; 	// Enabled - Receiver
+    UART2_C2 |= UART_C2_TE_MASK; 	// Enabled - Transmitter
+    UART2_C2 &= ~ UART_C2_ILIE_MASK; 	// Disabled
+    UART2_C2 &= ~ UART_C2_RIE_MASK; 	// Disabled
+    UART2_C2 &= ~ UART_C2_TCIE_MASK; 	// Disabled
+    UART2_C2 &= ~ UART_C2_TIE_MASK; 	// Disabled
+
+    UART2_C4 |= UART_C4_BRFA_MASK;
 
   // Requested Baud Rate setup
 
@@ -35,7 +64,7 @@ BOOL UART_Init(const uint32_t baudRate, const uint32_t moduleClk)
   uint8_t setting_high = (setting & 0x1F00) >> 8;		// Setting the the upper 8 bits of the modulus counter
   uint8_t setting_low = (setting & 0xFF);			// Masked to get lower 8 bits of the baud rate
 
-  // Updating the 13-bit baud rate setting
+  // U-g
 
   UART2_BDH = setting_high & 0x1F;	// Buffers the high half of the new value
   UART2_BDL = setting_low;		// Reset to a nonzero value (fraction of 4/32)
