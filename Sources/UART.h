@@ -1,13 +1,16 @@
 /*! @file
  *
- *  @brief I/O routines for UART communications on the TWR-K70F120M
+ *  @brief I/O routines for UART communications on the TWR-K70F120M.
  *
- *  This contains the functions for operating the UART (serial port)
+ *  This contains the functions for operating the UART (serial port).
  *
- *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
- *  @date 03-08-2016
+ *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @date 2016-08-16
  */
-
+/*!
+ * @addtogroup UART_module UART module documentation
+ * @{
+*/
 #ifndef UART_H
 #define UART_H
 
@@ -49,5 +52,9 @@ BOOL UART_OutChar(const uint8_t data);
  *  @note Assumes that UART_Init has been called.
  */
 void UART_Poll(void);
+
+/*!
+ * @}
+*/
 
 #endif

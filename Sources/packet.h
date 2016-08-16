@@ -2,12 +2,15 @@
  *
  *  @brief Routines to implement packet encoding and decoding for the serial port.
  *
- *  This contains the functions for implementing the "Tower to PC Protocol" 5-byte packets.
+ *  This contains the functions for implementing the Tower to PC Protocol 5-byte packets.
  *
- *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
- *  @date 03-08-2016
+ *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @date 2016-08-16
  */
-
+/*!
+ * @addtogroup Packet_module Packet module documentation
+ * @{
+*/
 #ifndef PACKET_H
 #define PACKET_H
 
@@ -42,5 +45,9 @@ BOOL Packet_Get(void);
  *  @return BOOL - TRUE if a valid packet was sent.
  */
 BOOL Packet_Put(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3);
+
+/*!
+ * @}
+*/
 
 #endif

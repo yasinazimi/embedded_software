@@ -2,12 +2,15 @@
  *
  *  @brief Routines to implement a FIFO buffer.
  *
- *  This contains the structure and "methods" for accessing a byte-wide FIFO.
+ *  This contains the methods and structure for accessing a byte-wide FIFO.
  *
- *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
- *  @date 03-08-2016
+ *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @date 2016-08-16
  */
-
+/*!
+ * @addtogroup FIFO_module FIFO module documentation
+ * @{
+*/
 #ifndef FIFO_H
 #define FIFO_H
 
@@ -52,5 +55,9 @@ BOOL FIFO_Put(TFIFO * const FIFO, const uint8_t data);
  *  @note Assumes that FIFO_Init has been called.
  */
 BOOL FIFO_Get(TFIFO * const FIFO, uint8_t * const dataPtr);
+
+/*!
+ * @}
+*/
 
 #endif

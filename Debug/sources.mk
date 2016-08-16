@@ -26,8 +26,5 @@ S_UPPER_DEPS :=
 SUBDIRS := \
 Sources \
 Project_Settings/Startup_Code \
-Lab1/Debug/Sources \
-Lab1/Debug/Project_Settings/Startup_Code \
-Lab1/Debug/Generated_Code \
 Generated_Code \
 

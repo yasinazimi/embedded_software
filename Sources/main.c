@@ -4,7 +4,7 @@
 **     Processor   : MK70FN1M0VMJ12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-07-20, 13:27, # CodeGen: 0
+**     Date/Time   : 2016-08-16, 22:00, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -27,18 +27,18 @@
 /* MODULE main */
 
 
-// CPU mpdule - contains low level hardware initialization routines
-#include "Cpu.h"
-#include "packet.h"
-#include "UART.h"
-#include "cmd.h"
-
+// CPU module - contains low level hardware initialization routines
 #include "PE_Types.h"
 #include "PE_Error.h"
 #include "PE_Const.h"
 #include "IO_Map.h"
 
+#include "Cpu.h"
+#include "packet.h"
+#include "UART.h"
+#include "cmd.h"
 
+// Setting the baud rate and the module clock
 const uint32_t BAUD_RATE = 38400;
 const uint32_t MODULE_CLOCK = CPU_BUS_CLK_HZ;
 
@@ -48,8 +48,7 @@ const uint8_t PACKET_ACK_MASK = 0x80;
 void Packet_Handle()
 {
   BOOL error = bTRUE;
-  //mask out the ack, otherwise it goes to default
-  switch(Packet_Command & ~PACKET_ACK_MASK)
+  switch(Packet_Command & ~PACKET_ACK_MASK)	// Mask out the acknowledgement, otherwise it goes to default
   {
     case CMD_RX_GET_SPECIAL_START_VAL:
       Send_Startup();

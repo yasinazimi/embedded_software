@@ -1,13 +1,15 @@
 /*! @file
  *
- *  @brief Abstraction of commands for the tower into functions
+ *  @brief Computer command function implementation
  *
- *  @author Mohammad Yasin Azimi (11733490), Micheal Codner (11989668)
- *  @date 15-08-2016
+ *  Implementations of functions which abstract communication with the computer into commands.
+ *
+ *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @date 2016-08-16
  */
 /*!
-**  @addtogroup cmd_module CMD module documentation
-**  @{
+ * @addtogroup CMD_module CMD module documentation
+ * @{
 */
 #include "cmd.h"
 #include "packet.h"
@@ -15,8 +17,8 @@
 const uint8_t TOWER_VERSION_H = 1;
 const uint8_t TOWER_VERISON_L = 0;
 
-uint8_t towerNumberLsb = (CMD_SID & 0x00FF);
-uint8_t towerNumberMsb = (CMD_SID & 0xFF00) >> 8;
+uint8_t towerNumberLsb = 0xA2;		// Least-significant-bit of the lower 2 bytes of student ID
+uint8_t towerNumberMsb = 0x0D;		// Most-significant-bit of the lower 2 bytes of student ID
 
 void Send_Startup()
 {
@@ -40,5 +42,5 @@ void Receive_Tower_Number(uint8_t lsb, uint8_t msb)
 }
 
 /*!
-** @}
+ * @}
 */
