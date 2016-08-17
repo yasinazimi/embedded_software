@@ -51,23 +51,23 @@ void Packet_Handle()
   switch(Packet_Command & ~PACKET_ACK_MASK)	// Mask out the acknowledgement, otherwise it goes to default
   {
     case CMD_RX_GET_SPECIAL_START_VAL:
-      Send_Startup();
-      Send_Special_Tower_Version();
-      Send_Tower_Number();
+      CMD_Send_Startup();
+      CMD_Send_Special_Tower_Version();
+      CMD_Send_Tower_Number();
       error = bFALSE;
       break;
     case CMD_RX_GET_VERSION:
-      Send_Special_Tower_Version();
+      CMD_Send_Special_Tower_Version();
       error = bFALSE;
       break;
     case CMD_RX_TOWER_NUMBER:
       if (Packet_Parameter1 == CMD_TOWER_NUMBER_GET)
       {
-	Send_Tower_Number();
+	CMD_Send_Tower_Number();
       }
       else if (Packet_Parameter1 == CMD_TOWER_NUMBER_SET)
       {
-	Receive_Tower_Number(Packet_Parameter2, Packet_Parameter3);
+	CMD_Receive_Tower_Number(Packet_Parameter2, Packet_Parameter3);
       }
       error = bFALSE;
       break;
@@ -75,17 +75,17 @@ void Packet_Handle()
       break;
   }
   if (Packet_Command & PACKET_ACK_MASK)
+  {
+    uint8_t maskedPacket = 0;
+    if (error == bTRUE)
     {
-      uint8_t maskedPacket = 0;
-      if (error == bTRUE)
-      {
-	maskedPacket = Packet_Command & ~PACKET_ACK_MASK;
-      }
-      else
-      {
-	maskedPacket = Packet_Command | PACKET_ACK_MASK;
-      }
-      Packet_Put(maskedPacket, Packet_Parameter1, Packet_Parameter2, Packet_Parameter3);
+      maskedPacket = Packet_Command & ~PACKET_ACK_MASK;
+    }
+    else
+    {
+      maskedPacket = Packet_Command | PACKET_ACK_MASK;
+    }
+    Packet_Put(maskedPacket, Packet_Parameter1, Packet_Parameter2, Packet_Parameter3);
   }
 }
 
@@ -102,17 +102,17 @@ int main(void)
   /* Write your code here */
   Packet_Init(BAUD_RATE, MODULE_CLOCK);
 
-  Send_Startup();
-  Send_Special_Tower_Version();
-  Send_Tower_Number();
+  CMD_Send_Startup();
+  CMD_Send_Special_Tower_Version();
+  CMD_Send_Tower_Number();
 
   for (;;)
   {
-      UART_Poll();
-      if (Packet_Get())
-      {
-	  Packet_Handle();
-      }
+    UART_Poll();
+    if (Packet_Get())
+    {
+      Packet_Handle();
+    }
   }
 
   /*** Don't write any code pass this line, or it will be deleted during code generation. ***/

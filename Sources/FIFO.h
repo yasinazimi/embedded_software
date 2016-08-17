@@ -4,7 +4,7 @@
  *
  *  This contains the methods and structure for accessing a byte-wide FIFO.
  *
- *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @author Mohammad Yasin Azimi, Michael Codner
  *  @date 2016-08-16
  */
 /*!

@@ -93,7 +93,7 @@ var NAVTREEINDEX8 =
 "group___c_a_u___register___accessor___macros.html#gaf40d268f29ac1bc11cf78dc3a63890e3":[4,0,2,0,0,1888],
 "group___c_a_u___register___accessor___macros.html#gaf572312c6f0fd630bf89c3927be11a2e":[4,0,2,0,0,1859],
 "group___c_a_u___register___accessor___macros.html#gaff0710a28cdd7cfca1d097de3466bc1c":[4,0,2,0,0,1887],
-"group___c_a_u___register___masks.html":[2,8,4,1],
+"group___c_a_u___register___masks.html":[2,12,4,1],
 "group___c_a_u___register___masks.html#ga00cb0732940136f8434d5c19c522ebad":[4,0,2,0,0,1856],
 "group___c_a_u___register___masks.html#ga017a8a273655c5f491aa2b348b1ed9bc":[4,0,2,0,0,1910],
 "group___c_a_u___register___masks.html#ga01c020c68f19a6eeb989124dd2bc4155":[4,0,2,0,0,2064],

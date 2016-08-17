@@ -2,9 +2,9 @@
  *
  *  @brief Functions which abstract communication with the computer into commands.
  *
- *  This contains the functions for the data transmission between PC and Tower and vice versa.
+ *  This contains the prototypes of functions for the data transmission between PC and Tower and vice versa.
  *
- *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @author Mohammad Yasin Azimi, Michael Codner
  *  @date 2016-08-16
  */
 /*!
@@ -68,24 +68,24 @@
 /*!
  * @brief Sends the startup packet to the computer.
  */
-void Send_Startup();
+void CMD_Send_Startup();
 
 /*!
  * @brief Sends the tower version to the computer.
  */
-void Send_Special_Tower_Version();
+void CMD_Send_Special_Tower_Version();
 
 /*!
  * @brief Sends the tower number to the computer.
  */
-void Send_Tower_Number();
+void CMD_Send_Tower_Number();
 
 /*!
  * @brief Saves the Tower number to a buffer.
  * @param lsb Least significant byte of the Tower number
  * @param msb Most significant byte of the Tower number
  */
-void Receive_Tower_Number(uint8_t lsb, uint8_t msb);
+void CMD_Receive_Tower_Number(uint8_t lsb, uint8_t msb);
 
 /*!
  * @}

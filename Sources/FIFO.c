@@ -4,7 +4,7 @@
  *
  *  Implementation of the FIFO module for handling buffer data.
  *
- *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @author Mohammad Yasin Azimi, Michael Codner
  *  @date 2016-08-16
  */
 /*!

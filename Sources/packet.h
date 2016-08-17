@@ -4,7 +4,7 @@
  *
  *  This contains the functions for implementing the Tower to PC Protocol 5-byte packets.
  *
- *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @author Mohammad Yasin Azimi, Michael Codner
  *  @date 2016-08-16
  */
 /*!

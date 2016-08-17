@@ -4,7 +4,7 @@
  *
  *  Implementation of the UART module for handling UART communication.
  *
- *  @author Mohammad Yasin Azimi, Micheal Codner
+ *  @author Mohammad Yasin Azimi, Michael Codner
  *  @date 2016-08-16
  */
 /*!
@@ -33,14 +33,14 @@ BOOL UART_Init(const uint32_t baudRate, const uint32_t moduleClk)
   UART2_C1 &= ~UART_C1_LOOPS_MASK; 	// Disabled
 
   // Enabling C2 control registers
-  UART2_C2 &= ~ UART_C2_SBK_MASK; 	// Disabled
-  UART2_C2 &= ~ UART_C2_RWU_MASK; 	// Disabled
+  UART2_C2 &= ~UART_C2_SBK_MASK; 	// Disabled
+  UART2_C2 &= ~UART_C2_RWU_MASK; 	// Disabled
   UART2_C2 |= UART_C2_RE_MASK; 		// Enabled - Receiver
   UART2_C2 |= UART_C2_TE_MASK; 		// Enabled - Transmitter
-  UART2_C2 &= ~ UART_C2_ILIE_MASK; 	// Disabled
-  UART2_C2 &= ~ UART_C2_RIE_MASK; 	// Disabled
-  UART2_C2 &= ~ UART_C2_TCIE_MASK; 	// Disabled
-  UART2_C2 &= ~ UART_C2_TIE_MASK; 	// Disabled
+  UART2_C2 &= ~UART_C2_ILIE_MASK; 	// Disabled
+  UART2_C2 &= ~UART_C2_RIE_MASK; 	// Disabled
+  UART2_C2 &= ~UART_C2_TCIE_MASK; 	// Disabled
+  UART2_C2 &= ~UART_C2_TIE_MASK; 	// Disabled
 
   // Setting the Baud Rate fine adjust
   UART2_C4 |= UART_C4_BRFA_MASK;
@@ -48,7 +48,7 @@ BOOL UART_Init(const uint32_t baudRate, const uint32_t moduleClk)
   // Requested Baud Rate setup
   uint16_t setting  = (uint16_t)(moduleClk/(baudRate * 16));	// Setting the baud rate which is synchronized with the module clock
   uint8_t setting_high = (setting & 0x1F00) >> 8;		// Setting the the upper 8 bits of the modulus counter
-  uint8_t setting_low = (setting & 0xFF);			// Masked to get lower 8 bits of the baud rate
+  uint8_t setting_low = setting;				// Masked to get lower 8 bits of the baud rate
 
   // Updating the 13-bit baud rate setting
   UART2_BDH = setting_high & 0x1F;				// Buffers the high half of the new value
@@ -77,7 +77,7 @@ void UART_Poll(void)
   // Checks for the status of the transmit register
   if (UART2_S1 & UART_S1_TDRE_MASK)
   {
-    FIFO_Get(&TxFIFO, &UART2_D);
+    FIFO_Get(&TxFIFO, (uint8_t *)&UART2_D);
   }
 
   // Checks for the status of the receive register
