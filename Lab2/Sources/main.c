@@ -34,6 +34,8 @@
 #include "IO_Map.h"
 
 #include "Cpu.h"
+#include "LEDs.h"
+#include "flash.h"
 #include "packet.h"
 #include "UART.h"
 #include "cmd.h"
@@ -48,28 +50,26 @@ const uint8_t PACKET_ACK_MASK = 0x80;
 void Packet_Handle()
 {
   BOOL error = bTRUE;
-  switch(Packet_Command & ~PACKET_ACK_MASK)	// Mask out the acknowledgement, otherwise it goes to default
+  switch(Packet_Command & ~PACKET_ACK_MASK) // Mask out the acknowledgement, otherwise it goes to default
   {
     case 0x04:
-      CMD_Send_Startup();
-      CMD_Send_Special_Tower_Version();
-      CMD_Send_Tower_Number();
-      error = bFALSE;
+      error = !CMD_Send_Startup();
+      error = !CMD_Send_Special_Tower_Version();
+      error = !CMD_Send_Tower_Number();
+      error = !CMD_Send_Tower_Mode();
       break;
     case 0x09:
-      CMD_Send_Special_Tower_Version();
-      error = bFALSE;
+      error = !CMD_Send_Special_Tower_Version();;
       break;
     case 0x0B:
       if (Packet_Parameter1 == 1)
       {
-	CMD_Send_Tower_Number();
+        error = !CMD_Send_Tower_Number();
       }
       else if (Packet_Parameter1 == 2)
       {
-	CMD_Receive_Tower_Number(Packet_Parameter2, Packet_Parameter3);
+        error = !CMD_Receive_Tower_Number(Packet_Parameter2, Packet_Parameter3);
       }
-      error = bFALSE;
       break;
     default:
       break;

@@ -16,14 +16,14 @@
 #include "cmd.h"
 #include "UART.h"
 
-static uint8_t State = 0;	/*!< The index of the byte in the packet, 5 bytes = 1 packet */
-static uint8_t Checksum;	/*!< The received checksum of the packet */
+static uint8_t State = 0; /*!< The index of the byte in the packet, 5 bytes = 1 packet */
+static uint8_t Checksum;  /*!< The received checksum of the packet */
 
 // Packet structure
-uint8_t Packet_Command,		/*!< The packet's command */
-	Packet_Parameter1, 	/*!< The packet's 1st parameter */
-	Packet_Parameter2, 	/*!< The packet's 2nd parameter */
-	Packet_Parameter3;	/*!< The packet's 3rd parameter */
+uint8_t Packet_Command,   /*!< The packet's command */
+  Packet_Parameter1,  /*!< The packet's 1st parameter */
+  Packet_Parameter2,  /*!< The packet's 2nd parameter */
+  Packet_Parameter3;  /*!< The packet's 3rd parameter */
 
 // Calculates the checksum by XORing parameters 1, 2 and 3
 uint8_t PacketTest()
@@ -41,8 +41,8 @@ BOOL Packet_Init(const uint32_t baudRate, const uint32_t moduleClk)
 
 BOOL Packet_Get(void)
 {
-  uint8_t uartData; 		/*!< Store the byte received */
-  if (!UART_InChar(&uartData))	// Attempt to receive a byte and continue if successful
+  uint8_t uartData;     /*!< Store the byte received */
+  if (!UART_InChar(&uartData))  // Attempt to receive a byte and continue if successful
   {
     return bFALSE;
   }
@@ -68,8 +68,8 @@ BOOL Packet_Get(void)
       Checksum = uartData;
       if (PacketTest())
       {
-	State = 0;
-	return bTRUE;
+  State = 0;
+  return bTRUE;
       }
       Packet_Command = Packet_Parameter1;
       Packet_Parameter1 = Packet_Parameter2;
