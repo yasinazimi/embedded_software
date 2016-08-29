@@ -4,8 +4,8 @@
  *
  *  This contains the functions for implementing the Tower to PC Protocol 5-byte packets.
  *
- *  @author Mohammad Yasin Azimi, Michael Codner
- *  @date 2016-08-24
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
 /*!
  * @addtogroup Packet_module Packet module documentation
@@ -24,7 +24,7 @@
 // Struct contains only 3 bytes
 typedef struct
 {
-  uint8_t command;		/*!< The packet's command. */
+  uint8_t command;			/*!< The packet's command. */
   union
   {
     struct
@@ -32,7 +32,7 @@ typedef struct
       uint8_t parameters1;	/*!< The packet's 1st parameter. */
       uint8_t parameters2;	/*!< The packet's 2nd parameter. */
       uint8_t parameters3;	/*!< The packet's 3rd parameter. */
-    } separate; 		// Structure name
+    } separate; 			/*!< Struct name. */
     struct
     {
       // Accesses parameters 1 and 2 bytes as 16 chunk
@@ -49,7 +49,9 @@ typedef struct
 } TPacket;
 #pragma pack(pop)
 
-uint8_t 	Packet_Command,		/*!< The packet's command */
+TPacket Packet;
+
+uint8_t Packet_Command,		/*!< The packet's command */
 		Packet_Parameter1, 	/*!< The packet's 1st parameter */
 		Packet_Parameter2, 	/*!< The packet's 2nd parameter */
 		Packet_Parameter3;	/*!< The packet's 3rdt parameter */
@@ -62,9 +64,6 @@ uint8_t 	Packet_Command,		/*!< The packet's command */
 //#define Packet_Parameter3  Packet.parameters.separate.parameter3
 //#define Packet_Parameter12 Packet.parameters.combined12.parameter12
 //#define Packet_Parameter23 Packet.parameters.combined23.parameter23
-
-
-TPacket Packet;
 
 // Acknowledgement bit mask
 extern const uint8_t PACKET_ACK_MASK;

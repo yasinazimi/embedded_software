@@ -4,8 +4,8 @@
  *
  *  This contains the functions for operating the UART (serial port).
  *
- *  @author Mohammad Yasin Azimi, Michael Codner
- *  @date 2016-08-22
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
 /*!
  * @addtogroup UART_module UART module documentation
@@ -19,7 +19,7 @@
 
 #include "FIFO.h"
 
-// Initializing FIFO
+// Initialising FIFO
 TFIFO RxFIFO, TxFIFO;
 
 /*! @brief Sets up the UART interface before first use.

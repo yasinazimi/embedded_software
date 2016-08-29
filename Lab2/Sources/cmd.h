@@ -4,8 +4,8 @@
  *
  *  This contains the prototypes of functions for the data transmission between PC and Tower and vice versa.
  *
- *  @author Mohammad Yasin Azimi, Michael Codner
- *  @date 2016-08-24
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
 /*!
  * @addtogroup CMD_module CMD module documentation

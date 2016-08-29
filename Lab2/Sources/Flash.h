@@ -4,9 +4,13 @@
  *
  *  This contains the functions needed for accessing the internal Flash.
  *
- *  @author PMcL
- *  @date 2015-08-07
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
+/*!
+ * @addtogroup Flash_module Flash module documentation
+ * @{
+*/
 
 #ifndef FLASH_H
 #define FLASH_H
@@ -15,15 +19,17 @@
 #include "types.h"
 
 // FLASH data access
-#define _FB(flashAddress)  *(uint8_t  volatile *)(flashAddress)
-#define _FH(flashAddress)  *(uint16_t volatile *)(flashAddress)
-#define _FW(flashAddress)  *(uint32_t volatile *)(flashAddress)
-#define _FP(flashAddress)  *(uint64_t volatile *)(flashAddress)
+#define _FB(flashAddress)  *(uint8_t  volatile *)(flashAddress)	// byte
+#define _FH(flashAddress)  *(uint16_t volatile *)(flashAddress)	// word
+#define _FW(flashAddress)  *(uint32_t volatile *)(flashAddress)	// longword 32bit
+#define _FP(flashAddress)  *(uint64_t volatile *)(flashAddress)	// phrase 64bit
 
 // Address of the start of the Flash block we are using for data storage
 #define FLASH_DATA_START 0x00080000LU
 // Address of the end of the Flash block we are using for data storage
 #define FLASH_DATA_END   0x00080007LU
+// The number of bytes in the flash block (currently 8)
+#define FLASH_DATA_SIZE ((FLASH_DATA_END-FLASH_DATA_START)+1)
 
 /*! @brief Enables the Flash module.
  *
@@ -79,5 +85,9 @@ BOOL Flash_Write8(volatile uint8_t* const address, const uint8_t data);
  *  @note Assumes Flash has been initialized.
  */
 BOOL Flash_Erase(void);
+
+/*!
+ * @}
+*/
 
 #endif

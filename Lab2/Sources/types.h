@@ -4,8 +4,8 @@
  *
  *  This contains types that are especially useful for the Tower to PC Protocol.
  *
- *  @author Mohammad Yasin Azimi, Michael Codner
- *  @date 2016-08-22
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
 
 #ifndef TYPES_H
@@ -62,5 +62,9 @@ typedef enum
   bFALSE = 0,	/*!< Boolean false - always 0*/
   bTRUE = 1	/*!< Boolean true - always 1 */
 } BOOL;
+
+/*!
+ * @}
+*/
 
 #endif

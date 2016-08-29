@@ -4,8 +4,8 @@
  *
  *  Implementation of the packet module for handling 5 bytes packets.
  *
- *  @author Mohammad Yasin Azimi, Michael Codner
- *  @date 2016-08-23
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
 /*!
  * @addtogroup Packet_module Packet module documentation
@@ -16,14 +16,14 @@
 #include "cmd.h"
 #include "UART.h"
 
-static uint8_t State = 0; /*!< The index of the byte in the packet, 5 bytes = 1 packet */
-static uint8_t Checksum;  /*!< The received checksum of the packet */
+static uint8_t State = 0; 	/*!< The index of the byte in the packet, 5 bytes = 1 packet */
+static uint8_t Checksum;  	/*!< The received checksum of the packet */
 
 // Packet structure
-uint8_t Packet_Command,   /*!< The packet's command */
-  Packet_Parameter1,  /*!< The packet's 1st parameter */
-  Packet_Parameter2,  /*!< The packet's 2nd parameter */
-  Packet_Parameter3;  /*!< The packet's 3rd parameter */
+uint8_t Packet_Command,   	/*!< The packet's command */
+  Packet_Parameter1,  		/*!< The packet's 1st parameter */
+  Packet_Parameter2,  		/*!< The packet's 2nd parameter */
+  Packet_Parameter3;  		/*!< The packet's 3rd parameter */
 
 // Calculates the checksum by XORing parameters 1, 2 and 3
 uint8_t PacketTest()

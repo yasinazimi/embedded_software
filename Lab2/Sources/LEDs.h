@@ -4,18 +4,21 @@
  *
  *  This contains the functions for operating the LEDs.
  *
- *  @author Mohammad Yasin Azimi, Michael Codner
- *  @date 2016-08-24
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
-
+/*!
+ * @addtogroup LED_module LEDs module documentation
+ * @{
+*/
 #ifndef LEDS_H
 #define LEDS_H
 
 // new types
 #include "types.h"
 
-/*! @brief LED to pin mapping on the TWR-K70F120M
- *
+/*!
+ * @brief LED to pin mapping on the TWR-K70F120M
  */
 typedef enum
 {

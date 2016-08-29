@@ -4,22 +4,32 @@
  *
  *  Implementations of functions which abstract communication with the computer into commands.
  *
- *  @author Mohammad Yasin Azimi, Michael Codner
- *  @date 2016-08-24
+ *  @author Mohammad Yasin Azimi
+ *  @date 2016-08-30
  */
 /*!
  * @addtogroup CMD_module CMD module documentation
  * @{
 */
 #include "cmd.h"
+
+#include "flash.h"
+#include "types.h"
 #include "packet.h"
 
+#define CMD_SID 0x0DA2
+
+/*!
+ * Tower software version V01.00
+ */
 const uint8_t TOWER_VERSION_H = 1;
 const uint8_t TOWER_VERISON_L = 0;
+
+static uint16union_t volatile *TowerNumber;
+static uint16union_t volatile *TowerMode;
+
 /*!
- * The Tower will issue this command upon startup to allow
- * the PC to update the interface application and the Tower.
- * Typically, setup data will also be sent from the Tower to the PC.
+ * Tower will update interface application on the PC and the Tower.
  */
 const uint8_t CMD_TX_TOWER_STARTUP = 0x04;
 
@@ -42,13 +52,6 @@ const uint8_t CMD_TOWER_NUMBER_GET = 1;
  * Packet parameter 1 to 'set' Tower number.
  */
 const uint8_t CMD_TOWER_NUMBER_SET = 2;
-
-/*!
- * 11733490 = 0xB309F2
- * xxxx3490 = 0x0DA2 - use the lower 2 bytes as param1 and param2
- */
-static uint8_t TowerNumberLsb = 0xA2;   // Least-significant-bit of the lower 2 bytes of student ID
-static uint8_t TowerNumberMsb = 0x0D >> 8;  // Most-significant-bit of the lower 2 bytes of student ID
 
 /*!
  * Program a byte of flash
@@ -89,56 +92,100 @@ const uint8_t CMD_TOWER_MODE_SET = 2;
 // End of globals
 // 
 
+// 
 BOOL CMD_Init() 
 {
-  return bTRUE; // Temp until we implement writing to flash
+  BOOL allocSpace = Flash_AllocateVar((volatile void **) &TowerNumber, sizeof(uint16union_t));
+  BOOL allocMode = Flash_AllocateVar((volatile void **) &TowerMode, sizeof(uint16union_t));
+  if (allocSpace == bTRUE && allocMode == bTRUE)
+  {
+    if (TowerNumber->l == 0xFFFF)
+    {
+      Flash_Write16((uint16_t volatile *) TowerNumber, CMD_SID);
+    }
+    if (TowerMode->l == 0xFFFF)
+    {
+      Flash_Write16((uint16_t volatile *) TowerMode, 0x1);
+    }
+    return bTRUE;
+  }
+  return bFALSE;
 }
 
+// 
 BOOL CMD_Send_Startup()
 {
   return Packet_Put(CMD_TX_TOWER_STARTUP, 0x0, 0x0, 0x0);
 }
 
+// 
 BOOL CMD_Send_Special_Tower_Version()
 {
   return Packet_Put(CMD_TX_TOWER_VERSION, 'v', TOWER_VERSION_H, TOWER_VERISON_L);
 }
 
+// 
 BOOL CMD_Send_Tower_Number()
 {
-  return Packet_Put(CMD_TX_TOWER_NUMBER, 1, TowerNumberLsb, TowerNumberMsb);
+  return Packet_Put(CMD_TX_TOWER_NUMBER, 1, TowerNumber->s.Lo, TowerNumber->s.Hi);
 }
 
+// 
 BOOL CMD_Send_Flash_Read_Byte(const uint8_t offset, const uint8_t data)
 {
-  return bTRUE; // Temp until we implement writing to flash
+  return bTRUE;
 }
 
+// 
 BOOL CMD_Send_Tower_Mode()
 {
-  return bTRUE; // Temp until we implement writing to flash
+  return Packet_Put(CMD_TX_TOWER_MODE, 0x1, TowerMode->s.Lo, TowerMode->s.Hi);
 }
 
+// 
 BOOL CMD_Receive_Flash_Program_Byte(const uint8_t offset, const uint8_t data)
 {
-  return bTRUE; // Temp until we implement writing to flash
+  // Change 8 to FLASH_DATA_SIZE for dynamicness
+  if (offset > 8)
+  {
+    return bFALSE;
+  }
+  // Change 8 to FLASH_DATA_SIZE for dynamicness
+  if (offset == 8)
+  {
+    return Flash_Erase();
+  }
+  uint8_t *address = (uint8_t *)(FLASH_DATA_START + offset);
+  return Flash_Write8(address, data);
 }
 
+// 
 BOOL CMD_Receive_Flash_Read_Byte(const uint8_t offset, uint8_t * const data)
 {
-  return bTRUE; // Temp until we implement writing to flash
+  if (offset > (FLASH_DATA_SIZE - 1))
+  {
+    return bFALSE;
+  }
+  *data = _FB(FLASH_DATA_START + offset);
+  return bTRUE;
 }
 
+// 
 BOOL CMD_Receive_Tower_Number(uint8_t lsb, uint8_t msb)
 {
-  TowerNumberLsb = lsb;
-  TowerNumberMsb = msb;
-  return bTRUE; // Temp until we implement writing to flash
+  uint16union_t temp;
+  temp.s.Hi = msb;
+  temp.s.Lo = lsb;
+  return Flash_Write16((uint16_t volatile *) TowerNumber, temp.l);
 }
 
+// 
 BOOL CMD_Receive_Tower_Mode(const uint8_t lsb, const uint8_t msb)
 {
-  return bTRUE; // Temp until we implement writing to flash
+  uint16union_t temp;
+  temp.s.Hi = msb;
+  temp.s.Lo = lsb;
+  return Flash_Write16((uint16_t volatile *) TowerMode, temp.l);
 }
 
 /*!
