@@ -4,7 +4,7 @@
  *
  *  This contains the functions needed for accessing the internal Flash.
  *
- *  @author Mohammad Yasin Azimi
+ *  @author Mohammad Yasin Azimi, Scott Williams, Simon Mackay
  *  @date 2016-08-30
  */
 /*!
@@ -30,6 +30,22 @@
 #define FLASH_DATA_END   0x00080007LU
 // The number of bytes in the flash block (currently 8)
 #define FLASH_DATA_SIZE ((FLASH_DATA_END-FLASH_DATA_START)+1)
+
+typedef struct
+{
+  uint8_t command;     		// FCMD is flash command 0xXX defines FTFE
+  uint8_t flashAddress23_16;
+  uint8_t flashAddress15_8;
+  uint8_t flashAddress7_0;
+  uint8_t dataByte0;
+  uint8_t dataByte1;
+  uint8_t dataByte2;
+  uint8_t dataByte3;
+  uint8_t dataByte4;
+  uint8_t dataByte5;
+  uint8_t dataByte6;
+  uint8_t dataByte7;
+} FCCOB_t;            		// Flash Common Command Object
 
 /*! @brief Enables the Flash module.
  *

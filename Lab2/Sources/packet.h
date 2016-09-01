@@ -4,7 +4,7 @@
  *
  *  This contains the functions for implementing the Tower to PC Protocol 5-byte packets.
  *
- *  @author Mohammad Yasin Azimi
+ *  @author Mohammad Yasin Azimi, Scott Williams, Simon Mackay
  *  @date 2016-08-30
  */
 /*!
@@ -24,7 +24,7 @@
 // Struct contains only 3 bytes
 typedef struct
 {
-  uint8_t command;			/*!< The packet's command. */
+  uint8_t command;		/*!< The packet's command. */
   union
   {
     struct
@@ -32,7 +32,7 @@ typedef struct
       uint8_t parameters1;	/*!< The packet's 1st parameter. */
       uint8_t parameters2;	/*!< The packet's 2nd parameter. */
       uint8_t parameters3;	/*!< The packet's 3rd parameter. */
-    } separate; 			/*!< Struct name. */
+    } separate; 		/*!< Struct name. */
     struct
     {
       // Accesses parameters 1 and 2 bytes as 16 chunk
@@ -51,7 +51,7 @@ typedef struct
 
 TPacket Packet;
 
-uint8_t Packet_Command,		/*!< The packet's command */
+uint8_t Packet_Command,			/*!< The packet's command */
 		Packet_Parameter1, 	/*!< The packet's 1st parameter */
 		Packet_Parameter2, 	/*!< The packet's 2nd parameter */
 		Packet_Parameter3;	/*!< The packet's 3rdt parameter */

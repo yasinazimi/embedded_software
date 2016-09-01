@@ -4,7 +4,7 @@
  *
  *  Implementation of the FIFO module for handling buffer data.
  *
- *  @author Mohammad Yasin Azimi
+ *  @author Mohammad Yasin Azimi, Scott Williams, Simon Mackay
  *  @date 2016-08-30
  */
 /*!
@@ -28,8 +28,8 @@ BOOL FIFO_Put(TFIFO * const FIFO, const uint8_t data)
   }
 
   FIFO->Buffer[FIFO->End] = data;		// Puts the data in the buffer
-  FIFO->End++;							// Increments the number of End in the cyclic buffer
-  FIFO->NbBytes++;						// Increments the number of NbBytes in the cyclic buffer
+  FIFO->End++;					// Increments the number of End in the cyclic buffer
+  FIFO->NbBytes++;				// Increments the number of NbBytes in the cyclic buffer
 
   if (FIFO->End >= FIFO_SIZE)			// Checks the position of FIFO in conjunction with End
   {
@@ -40,14 +40,14 @@ BOOL FIFO_Put(TFIFO * const FIFO, const uint8_t data)
 
 BOOL FIFO_Get(TFIFO * const FIFO, uint8_t * const dataPtr)
 {
-  if (!FIFO->NbBytes)					// Checks whether FIFO does not match the current number of bytes in the buffer
+  if (!FIFO->NbBytes)				// Checks whether FIFO does not match the current number of bytes in the buffer
   {
     return bFALSE;
   }
 
-  *dataPtr = FIFO->Buffer[FIFO->Start];	// Pointer to the FIFO buffer
-  FIFO->Start++;						// Increments the position of the oldest byte in the FIFO
-  FIFO->NbBytes--;						// Decrements the current number of NbBytes from the FIFO
+  *dataPtr = FIFO->Buffer[FIFO->Start];		// Pointer to the FIFO buffer
+  FIFO->Start++;				// Increments the position of the oldest byte in the FIFO
+  FIFO->NbBytes--;				// Decrements the current number of NbBytes from the FIFO
 
   if (FIFO->Start >= FIFO_SIZE)			// Checks the current position of FIFO
   {

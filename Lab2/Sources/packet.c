@@ -4,7 +4,7 @@
  *
  *  Implementation of the packet module for handling 5 bytes packets.
  *
- *  @author Mohammad Yasin Azimi
+ *  @author Mohammad Yasin Azimi, Scott Williams, Simon Mackay
  *  @date 2016-08-30
  */
 /*!
@@ -13,22 +13,19 @@
 */
 #include "packet.h"
 
-#include "cmd.h"
 #include "UART.h"
 
 static uint8_t State = 0; 	/*!< The index of the byte in the packet, 5 bytes = 1 packet */
 static uint8_t Checksum;  	/*!< The received checksum of the packet */
 
-// Packet structure
-uint8_t Packet_Command,   	/*!< The packet's command */
-  Packet_Parameter1,  		/*!< The packet's 1st parameter */
-  Packet_Parameter2,  		/*!< The packet's 2nd parameter */
-  Packet_Parameter3;  		/*!< The packet's 3rd parameter */
+/*!< The packet's command struct */
+TPacket Packet;
 
 // Calculates the checksum by XORing parameters 1, 2 and 3
 uint8_t PacketTest()
 {
-  uint8_t calc_checksum = Packet_Command ^ Packet_Parameter1 ^ Packet_Parameter2 ^ Packet_Parameter3; /*!< Calculate the checksum of the packet */
+  /*!< Calculate the checksum of the packet */
+  uint8_t calc_checksum = Packet_Command ^ Packet_Parameter1 ^ Packet_Parameter2 ^ Packet_Parameter3;
   uint8_t ret_val = calc_checksum == Checksum;
   return ret_val;
 }
@@ -41,8 +38,10 @@ BOOL Packet_Init(const uint32_t baudRate, const uint32_t moduleClk)
 
 BOOL Packet_Get(void)
 {
-  uint8_t uartData;     /*!< Store the byte received */
-  if (!UART_InChar(&uartData))  // Attempt to receive a byte and continue if successful
+  /*!< Store the byte received */
+  uint8_t uartData;
+  // Attempt to receive a byte and continue if successful
+  if (!UART_InChar(&uartData))
   {
     return bFALSE;
   }
@@ -97,6 +96,7 @@ BOOL Packet_Put(const uint8_t command, const uint8_t parameter1, const uint8_t p
   {
     return bFALSE;
   }
+  // Returns true to indicate 'Packet Put' to TxFIFO was a success
   return UART_OutChar(command ^ parameter1 ^ parameter2 ^ parameter3);
 }
 

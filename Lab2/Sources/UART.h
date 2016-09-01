@@ -4,7 +4,7 @@
  *
  *  This contains the functions for operating the UART (serial port).
  *
- *  @author Mohammad Yasin Azimi
+ *  @author Mohammad Yasin Azimi, Scott Williams, Simon Mackay
  *  @date 2016-08-30
  */
 /*!
