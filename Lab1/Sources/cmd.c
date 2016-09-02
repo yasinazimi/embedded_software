@@ -17,7 +17,7 @@
 const uint8_t TOWER_VERSION_H = 1;
 const uint8_t TOWER_VERISON_L = 0;
 
-static uint8_t TowerNumberLsb = (CMD_SID & 0x00FF);		// Least-significant-bit of the lower 2 bytes of student ID
+static uint8_t TowerNumberLsb = (CMD_SID & 0x00FF);			// Least-significant-bit of the lower 2 bytes of student ID
 static uint8_t TowerNumberMsb = (CMD_SID & 0xFF00) >> 8;	// Most-significant-bit of the lower 2 bytes of student ID
 
 void CMD_Send_Startup()
