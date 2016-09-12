@@ -7,7 +7,10 @@
  *  @author Mohammad Yasin Azimi, Scott Williams
  *  @date 2016-09-20
  */
-
+/*!
+ * @addtogroup RTC_module RTC module documentation
+ * @{
+*/
 #ifndef RTC_H
 #define RTC_H
 
@@ -20,9 +23,9 @@
  *  Enables the RTC and sets an interrupt every second.
  *  @param userFunction is a pointer to a user callback function.
  *  @param userArguments is a pointer to the user arguments to use with the user callback function.
- *  @return bool - TRUE if the RTC was successfully initialized.
+ *  @return BOOL - TRUE if the RTC was successfully initialized.
  */
-bool RTC_Init(void (*userFunction)(void*), void* userArguments);
+BOOL RTC_Init(void (*userFunction)(void*), void* userArguments);
 
 /*! @brief Sets the value of the real time clock.
  *
@@ -49,5 +52,9 @@ void RTC_Get(uint8_t* const hours, uint8_t* const minutes, uint8_t* const second
  *  @note Assumes the RTC has been initialized.
  */
 void __attribute__ ((interrupt)) RTC_ISR(void);
+
+/*!
+ * @}
+*/
 
 #endif

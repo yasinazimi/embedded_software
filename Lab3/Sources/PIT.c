@@ -14,26 +14,26 @@
 #include "PIT.h"
 #include "MK70F12.h"
 
-bool PIT_Init(const uint32_t moduleClk, void (*userFunction)(void*), void* userArguments)
+BOOL PIT_Init(const uint32_t moduleClk, void (*userFunction)(void*), void* userArguments)
 {
-	//
+  //
 }
 
-void PIT_Set(const uint32_t period, const bool restart)
+void PIT_Set(const uint32_t period, const BOOL restart)
 {
-	//
+  //
 }
 
-void PIT_Enable(const bool enable)
+void PIT_Enable(const BOOL enable)
 {
-	//
+  //
 }
 
 void __attribute__ ((interrupt)) PIT_ISR(void)
 {
-	//
+  //
 }
 
 /*!
-** @}
+ * @}
 */

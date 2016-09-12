@@ -3,10 +3,10 @@
   <Header>
     <Name>Lab3</Name>
     <SavedBy>PMcL</SavedBy>
-    <ModificationStamp>15</ModificationStamp>
+    <ModificationStamp>19</ModificationStamp>
     <Date>2015-07-20</Date>
     <IDE>Eclipse IDE</IDE>
-    <PEversion>1.12.2.RT7_b1550-0615</PEversion>
+    <PEversion>1.12.0.RT7_b1515-0427</PEversion>
   </Header>
   <Options>
     <ProjectMainModule>main</ProjectMainModule>
@@ -29,7 +29,7 @@
     <UseExistingModules>true</UseExistingModules>
     <RenamePeripheries>false</RenamePeripheries>
     <Autodependency>true</Autodependency>
-    <ProjectCompNumb>8</ProjectCompNumb>
+    <ProjectCompNumb>12</ProjectCompNumb>
     <DelUnusedPreviouslyGenFiles>true</DelUnusedPreviouslyGenFiles>
     <GeneratedCodeFrozen>false</GeneratedCodeFrozen>
     <AssignInitComponentNameToPrph>true</AssignInitComponentNameToPrph>

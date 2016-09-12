@@ -12,6 +12,7 @@
  * @{
 */
 #include "FIFO.h"
+#include "CPU.h"
 
 void FIFO_Init(TFIFO * const FIFO)
 {
@@ -22,38 +23,48 @@ void FIFO_Init(TFIFO * const FIFO)
 
 BOOL FIFO_Put(TFIFO * const FIFO, const uint8_t data)
 {
-  if (FIFO->NbBytes >= FIFO_SIZE)		// Checks the position of FIFO in conjunction with the number of NbBytes in the cyclic buffer
+  // EnterCritical();
+  if (FIFO->NbBytes == FIFO_SIZE)  		// Check if FIFO buffer is full
   {
+    // ExitCritical();
     return bFALSE;
   }
-
-  FIFO->Buffer[FIFO->End] = data;		// Puts the data in the buffer
-  FIFO->End++;					// Increments the number of End in the cyclic buffer
-  FIFO->NbBytes++;				// Increments the number of NbBytes in the cyclic buffer
-
-  if (FIFO->End >= FIFO_SIZE)			// Checks the position of FIFO in conjunction with End
+  else
   {
-    FIFO->End = 0;
+    FIFO->Buffer[FIFO->End] = data; 		// Place data in FIFO
+    if (FIFO->End == FIFO_SIZE-1)
+    {
+      FIFO->End = 0;                		// Circular buffer wraps around if at end of FIFO buffer
+    }
+    else
+    {
+      FIFO->End++;                  		// Next place in FIFO to write to
+    }
+    FIFO->NbBytes++; 				// Increment bytes in FIFO
+    // ExitCritical();
+    return bTRUE;
   }
-  return bTRUE;
 }
 
 BOOL FIFO_Get(TFIFO * const FIFO, uint8_t * const dataPtr)
 {
-  if (!FIFO->NbBytes)				// Checks whether FIFO does not match the current number of bytes in the buffer
+  //EnterCritical();
+  if (FIFO->NbBytes == 0) 			// Check if FIFO is empty
   {
+    //ExitCritical();
     return bFALSE;
   }
-
-  *dataPtr = FIFO->Buffer[FIFO->Start];		// Pointer to the FIFO buffer
-  FIFO->Start++;				// Increments the position of the oldest byte in the FIFO
-  FIFO->NbBytes--;				// Decrements the current number of NbBytes from the FIFO
-
-  if (FIFO->Start >= FIFO_SIZE)			// Checks the current position of FIFO
+  else
   {
-    FIFO->Start = 0;
+    *dataPtr = FIFO->Buffer[FIFO->Start]; 	// Oldest data in FIFO put to dataPtr
+    if (FIFO->Start == FIFO_SIZE-1) 		// Implement wrap around buffer
+      FIFO->Start = 0;
+    else
+    FIFO->Start++; 				// Increment position of oldest in buffer
+    FIFO->NbBytes--; 				// Decrease count of FIFO bytes
+    //ExitCritical();
+    return bTRUE;
   }
-  return bTRUE;
 }
 
 /*!

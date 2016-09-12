@@ -1,8 +1,8 @@
-/*! @file
+/*! @file packet.c
  *
- *  @brief Routines to implement packet encoding/decoding for serial port.
+ *  @brief Contains the packet encoding and decoding for the serial port.
  *
- *  Implementation of the packet module for handling 5 bytes packets.
+ *  Implementation of functions for the "Tower to PC Protocol" 5-byte packets.
  *
  *  @author Mohammad Yasin Azimi, Scott Williams
  *  @date 2016-09-20
@@ -12,92 +12,77 @@
  * @{
 */
 #include "packet.h"
-
 #include "UART.h"
+#include "FIFO.h"
+#include "CPU.h"
 
-static uint8_t State = 0; 	/*!< The index of the byte in the packet, 5 bytes = 1 packet */
-static uint8_t Checksum;  	/*!< The received checksum of the packet */
-
-/*!< The packet's command struct */
+static uint8_t Packet_Checksum;
 TPacket Packet;
 
-// Calculates the checksum by XORing parameters 1, 2 and 3
-uint8_t PacketTest()
+BOOL Packet_Init(const uint32_t baudRate, const uint32_t moduleClk)
 {
-  /*!< Calculate the checksum of the packet */
-  uint8_t calc_checksum = Packet_Command ^ Packet_Parameter1 ^ Packet_Parameter2 ^ Packet_Parameter3;
-  uint8_t ret_val = calc_checksum == Checksum;
-  return ret_val;
-}
-
-// Initializes baud rate and module clock
-bool Packet_Init(const uint32_t baudRate, const uint32_t moduleClk)
-{
+  //Because we want to set up the Tower Module to send and receive packets
   return UART_Init(baudRate, moduleClk);
 }
 
-bool Packet_Get(void)
+BOOL Packet_Get(void)
 {
-  /*!< Store the byte received */
-  uint8_t uartData;
-  // Attempt to receive a byte and continue if successful
-  if (!UART_InChar(&uartData))
-  {
-    return bFALSE;
-  }
-  switch (State)
-  {
-    case 0:
-      Packet_Command = uartData;
-      State++;
-      return bFALSE;
-    case 1:
-      Packet_Parameter1 = uartData;
-      State++;
-      return bFALSE;
-    case 2:
-      Packet_Parameter2 = uartData;
-      State++;
-      return bFALSE;
-    case 3:
-      Packet_Parameter3 = uartData;
-      State++;
-      return bFALSE;
-    case 4:
-      Checksum = uartData;
-      if (PacketTest())
-      {
-  State = 0;
-  return bTRUE;
-      }
-      Packet_Command = Packet_Parameter1;
-      Packet_Parameter1 = Packet_Parameter2;
-      Packet_Parameter2 = Packet_Parameter3;
-      Packet_Parameter3 = Checksum;
-      return bFALSE;
-  }
+EnterCritical();
+static uint8_t packetFiniteState = 0;
+switch (packetFiniteState)
+{
+  case 0:
+    if (UART_InChar(&Packet_Command))
+      packetFiniteState = 1;			// Because could not "Get" Packet_Command from RxFIFO
+    break;
+  case 1:
+    if (UART_InChar(&Packet_Parameter1)==bTRUE)
+      packetFiniteState = 2;			// Because could not "Get" Packet_Parameter1 from RxFIFO
+    break;
+  case 2:
+    if (UART_InChar(&Packet_Parameter2)==bTRUE)
+      packetFiniteState = 3;			// Because could not "Get" Packet_Parameter2 from RxFIFO
+    break;
+  case 3:
+    if (UART_InChar(&Packet_Parameter3)==bTRUE)
+      packetFiniteState = 4;			// Because could not "Get" Packet_Parameter3 from RxFIFO
+    break;
+  case 4:
+    if (UART_InChar(&Packet_Checksum)==bTRUE)
+      packetFiniteState = 5;			// Because could not "Get" Packet_Checksum from RxFIFO
+    break;
+  case 5:
+    if ( (((Packet_Command ^ Packet_Parameter1) ^ Packet_Parameter2) ^ Packet_Parameter3) == Packet_Checksum  )
+    {
+      packetFiniteState = 0;			// Because we want to reset the finite state machine
+      ExitCritical();
+      return bTRUE;				// Because we were able to "Get" correctly structured packet form RxFIFO
+    }
+    else
+    {
+      packetFiniteState = 4;
+      Packet_Command=Packet_Parameter1;
+      Packet_Parameter1=Packet_Parameter2;
+      Packet_Parameter2=Packet_Parameter3;
+      Packet_Parameter3=Packet_Checksum;
+    }
+    break;
+}
+ExitCritical();
+return bFALSE;
 }
 
-bool Packet_Put(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
+BOOL Packet_Put(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
 {
-  if (!UART_OutChar(command))
-  {
-    return bFALSE;
-  }
-  if (!UART_OutChar(parameter1))
-  {
-    return bFALSE;
-  }
-  if (!UART_OutChar(parameter2))
-  {
-    return bFALSE;
-  }
-  if (!UART_OutChar(parameter3))
-  {
-    return bFALSE;
-  }
-  // Returns true to indicate 'Packet Put' to TxFIFO was a success
-  return UART_OutChar(command ^ parameter1 ^ parameter2 ^ parameter3);
+  BOOL succC, succP1, succP2, succP3, succPC;
+  uint8_t packetChecksum = (((command ^ parameter1) ^ parameter2) ^ parameter3);
+
+  succC=UART_OutChar(command);
+  succP1=UART_OutChar(parameter1);
+  succP2=UART_OutChar(parameter2);
+  succP3=UART_OutChar(parameter3);
+  succPC=UART_OutChar(packetChecksum);
+  return(succC && succP1 && succP2 && succP3 && succPC);
 }
 
 /*!

@@ -4,7 +4,7 @@
 **     Processor   : MK70FN1M0VMJ12
 **     Version     : Driver 01.01
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2015-07-20, 13:27, # CodeGen: 0
+**     Date/Time   : 2016-08-16, 22:00, # CodeGen: 0
 **     Abstract    :
 **         Main module.
 **         This module contains user's application code.
@@ -15,7 +15,7 @@
 ** ###################################################################*/
 /*!
 ** @file main.c
-** @version 3.0
+** @version 1.0
 ** @brief
 **         Main module.
 **         This module contains user's application code.
@@ -42,7 +42,6 @@
 
 #define FLASH_ERASED_MAP 0xFFFFFFFFU
 
-
 static volatile uint16union_t *NvTowerNb;
 static BOOL Allocate_varTest;
 
@@ -53,7 +52,6 @@ uint8_t TowerMajorVersion =1;
 uint8_t TowerMinorVersion= 0;
 
 //Declare functions
-
 static BOOL PacketHandler(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3);
 static BOOL StartupCommand_4(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3);
 static BOOL ProgramByte_7(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3);
@@ -82,6 +80,7 @@ int main(void)
   //Turn on orange LED as an indicator of UART and flash and LED initialise success
   if(UART_Init(115200, CPU_BUS_CLK_HZ) && Flash_Init() && LEDs_Init()) LEDs_On(LED_ORANGE);
 
+  // Student ID
   tMode = 1;
   stuID = 3490;
 
@@ -99,11 +98,23 @@ int main(void)
   //Send start-up packet
   StartupCommand_4(0x04, 0, 0, 0);
 
+  // Test code
+  EnterCritical();
+  ExitCritical();
+  success=1;
+
+  Packet_Put(1,2,3,4);
+  Packet_Put(5,6,7,8);
+  Packet_Put(10,11,12,13);
+  Packet_Put(5,6,7,8);
+  Packet_Put(10,11,12,13);
+  Packet_Put(5,6,7,8);
+  Packet_Put(10,11,12,13);
   /* Write your code here */
   for (;;)
   {
-    UART_Poll();
-    if(Packet_Get()==bTRUE)
+    // UART_Poll();
+    if(Packet_Get())
     {
       PacketHandler(Packet_Command,Packet_Parameter1,Packet_Parameter2, Packet_Parameter3);
     }
@@ -132,10 +143,10 @@ int main(void)
  */
 static BOOL PacketHandler(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
 {
-  //command = Packet_command & ACK_MASK
+  // command = Packet_command & ACK_MASK
   switch (command)
   {
-    //success = startupcommandX
+    // success = startupcommandX
     case 0x04: case 0x84:
       return StartupCommand_4(command, parameter1, parameter2, parameter3);
       break;
@@ -154,15 +165,12 @@ static BOOL PacketHandler(const uint8_t command, const uint8_t parameter1, const
     case 0x0D: case 0x8D:
       return TowerModeCommand_D(command, parameter1, parameter2, parameter3);
     default:
-      //because command is invalid
-      if (command >> 7 == 1)
-      //because we want to provide acknowledgment for a bad command and return an error
+      if (command >> 7 == 1)							// Because command is invalid
       {
-	Packet_Put(command & 0x7F, parameter1, parameter2, parameter3);
+	Packet_Put(command & 0x7F, parameter1, parameter2, parameter3);		// Because we want to provide acknowledgment for a bad command and return an error
 	return bFALSE;
       }
-      else
-      // because no acknowledgment, do nothing but return an error
+      else									// Because no acknowledgment, do nothing but return an error
       {
 	return bFALSE;
       }
@@ -182,19 +190,19 @@ static BOOL StartupCommand_4(const uint8_t command, const uint8_t parameter1, co
   if (command == 0x04)
   {
     if (parameter1 == 0 && parameter2 == 0 && parameter3 == 0)
-    {                                                                       	//Valid parameters, failure to output returns a bFALSE
+    {                                                                       	// Valid parameters, failure to output returns a bFALSE
       return (Packet_Put(0x04, 0,0,0) && Packet_Put(0x09,'v',TowerMajorVersion, TowerMinorVersion)
 	&& Packet_Put(0x0B,1,0xFF & stuID, stuID >> 8)
 	&& Packet_Put(0x0D,1,0xFF & tMode, tMode >> 8));
     }
-    else                                                                       	//Invalid parameters flags a problem
+    else                                                                       	// Invalid parameters flags a problem
     {
       return bFALSE;
     }
   }
-  else                                                                        	//Command is 0x84
+  else                                                                        	// Command is 0x84
   {
-    if (parameter1 == 0 && parameter2 == 0 && parameter3 ==0)               	//Because parameters are valid
+    if (parameter1 == 0 && parameter2 == 0 && parameter3 ==0)               	// Because parameters are valid
     {
       if (Packet_Put(0x04, 0,0,0) && Packet_Put(0x09,'v',TowerMajorVersion, TowerMinorVersion)
 	&& Packet_Put(0x0B,1,0xFF & stuID, stuID >> 8)
@@ -207,7 +215,7 @@ static BOOL StartupCommand_4(const uint8_t command, const uint8_t parameter1, co
 	Packet_Put(0x04, 0,0,0);
       }
     }
-    else                                                                     	//Invalid parameters flags a problem with acknowledgment
+    else                                                                     	// Invalid parameters flags a problem with acknowledgment
     {
       Packet_Put(command & 0x7F, parameter1, parameter2, parameter3);
       return bFALSE;
@@ -229,45 +237,46 @@ static BOOL ProgramByte_7(const uint8_t command, const uint8_t parameter1, const
   uint8_t parameter3copy;
   uint32_t w1, w2;
   uint8_t b1;
-  if (parameter1 < 8 && parameter2 ==0)
-    {
-      //returns parameter3 data with parameter1 offset
-      WriteFlag=Flash_Write8((uint8_t volatile *)(FLASH_DATA_START+parameter1),parameter3);
-      parameter3copy=parameter3;
-    }
+  if (parameter1 < 8 && parameter2 == 0)
+  {
+    // Returns parameter3 data with parameter1 offset
+    WriteFlag=Flash_Write8((uint8_t volatile *)(FLASH_DATA_START+parameter1),parameter3);
+    parameter3copy=parameter3;
+  }
 
   else if (parameter1 == 8 && parameter2 == 0)
-    {
-      EraseFlag=Flash_Erase();
-      if (EraseFlag==1)
-	{
-	  parameter3copy=0xFF;							//Data feedback for erase indication in case of acknowledgment
-	}
-      else
-	parameter3copy=parameter3;
-    }
-  else
-    {}
-    //invalid parameters, nothing to do
-
-  //Perform acknowledgment tasks if necessary
-  if (command >> 7 == 1)							//Need to perform acknowledgments
   {
-    if (WriteFlag==1|EraseFlag==1)						//Acknowledge Success
+    EraseFlag=Flash_Erase();
+    if (EraseFlag==1)
+      {
+	parameter3copy=0xFF;							// Data feedback for erase indication in case of acknowledgment
+      }
+    else
+    {
+      parameter3copy = parameter3;
+    }
+  }
+  else
+    {
+      // Invalid parameters, nothing to do
+    }
+
+  // Perform acknowledgment tasks if necessary
+  if (command >> 7 == 1)							// Need to perform acknowledgments
+  {
+    if (WriteFlag == 1 | EraseFlag == 1)					// Acknowledge Success
     {
       return Packet_Put(command, parameter1, parameter2, parameter3copy);
     }
-    //NACK bit8 low
-    else
+    else									// NACK bit8 low
     {
       Packet_Put(command & 0x7F, parameter1, parameter2, parameter3copy);
       return bFALSE;								// Invalid parameters or bad write or bad erase
     }
   }
-  //No acknowledgment required
-  else
+  else										//No acknowledgment required
   {
-    if(WriteFlag==1|EraseFlag==1)						//Success of function, no acknowledgment
+    if(WriteFlag == 1 | EraseFlag == 1)						//Success of function, no acknowledgment
     {
       return bTRUE;
     }
@@ -288,20 +297,19 @@ static BOOL ProgramByte_7(const uint8_t command, const uint8_t parameter1, const
  */
 static BOOL ReadByte_8(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
 {
-  uint8_t readFlag=0;
-  uint8_t invalidFlag=0;
+  uint8_t readFlag = 0;
+  uint8_t invalidFlag = 0;
   uint8_t data;
-  //valid parameters received, parameter3 can be anything
-  if (parameter2==0)
+  if (parameter2 == 0)								// Valid parameters received, parameter3 can be anything
   {
-    data=_FB(FLASH_DATA_START+parameter1);					//Reads byte with offset from startup flash memory
-    readFlag=Packet_Put(command&0x7F, parameter1, parameter2, data);		//Read packet as per command
+    data=_FB(FLASH_DATA_START+parameter1);					// Reads byte with offset from startup flash memory
+    readFlag=Packet_Put(command&0x7F, parameter1, parameter2, data);		// Read packet as per command
   }
   else
   {
     invalidFlag=1;
   }
-  if (command >> 7 == 1)							//Do the acknowledgments
+  if (command >> 7 == 1)							// Do the acknowledgments
   {
     if (readFlag == bTRUE)
     {
@@ -309,17 +317,16 @@ static BOOL ReadByte_8(const uint8_t command, const uint8_t parameter1, const ui
     }
     else
     {
-      Packet_Put(command&0x7F, parameter1, parameter2, data);			//clear the top bit to indicate failure to read
+      Packet_Put(command&0x7F, parameter1, parameter2, data);			// Clear the top bit to indicate failure to read
       return bFALSE;
     }
   }
-  else										//No acknowledgments needed
+  else										// No acknowledgments needed
   {
     if (readFlag==bTRUE)
       return bTRUE;
     return bFALSE;
   }
-
 }
 
 /*! @brief Provides instructions for handling special command 0x09 coming from PC to tower
@@ -331,40 +338,42 @@ static BOOL ReadByte_8(const uint8_t command, const uint8_t parameter1, const ui
  */
 static BOOL SpecialCommand_9(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
 {
-  switch(parameter2)                                                           	//Switch used to allow function growth, parameter 2 easily
+  switch(parameter2)                                                           	// Switch used to allow function growth, parameter 2 easily
   //differentiates between future command 0x09 protocols
   {
     case 'x':
-      if(command >> 7 == 1)                                             	//Because we check for acknowledgment flag
+      if(command >> 7 == 1)                                             	// Because we check for acknowledgment flag
       {
-	if(parameter1 =='v' && parameter3 ==0xD)                               	//Valid parameter ASCII values for 'v' and CR (carriage return)
+	if(parameter1 == 'v' && parameter3 == 0xD)                               	// Valid parameter ASCII values for 'v' and CR (carriage return)
 	{
 	  return (Packet_Put(0x09,'v',TowerMajorVersion,TowerMinorVersion)
-	      && Packet_Put(command, parameter1, parameter2, parameter3));  	//Tower to PC Special-Tower Version command and acknowledgment package
+	    && Packet_Put(command, parameter1, parameter2, parameter3));  	// Tower to PC Special-Tower Version command and acknowledgment package
 	}
-	else                                                                    //Because invalid function parameters with acknowledgment flag
+	else                                                                    // Because invalid function parameters with acknowledgment flag
 	{
 	  Packet_Put(command& 0x7F, parameter1, parameter2, parameter3);
-	  return bFALSE;                                                      	//Flag an error after clearing ACK (acknowledgment) bit
+	  return bFALSE;                                                      	// Flag an error after clearing ACK (acknowledgment) bit
 	}
       }
-      else                                                                	// no acknowledgment required
+      else                                                                	// No acknowledgment required
       {
-	if(parameter1 =='v' && parameter3 ==0xD)                               	//ASCII values for 'v' and CR (carriage return)
+	if(parameter1 == 'v' && parameter3 == 0xD)                               	// ASCII values for 'v' and CR (carriage return)
 	  return Packet_Put(0x09,'v',TowerMajorVersion,TowerMinorVersion);     	// Tower to PC Special - Tower Version command, no acknowledgment
-	else                                                                   	//invalid function parameters
-	  return bFALSE;                                                       	//Flag an error without acknowledgment
+	else                                                                   	// Invalid function parameters
+	  return bFALSE;                                                       	// Flag an error without acknowledgment
       }
       break;
 
-    default:                                                                     //Invalid parameters lie here
-      if(command >> 7 == 1)                                                      //Check for acknowledgment flag
+    default:                                                                     // Invalid parameters lie here
+      if(command >> 7 == 1)                                                      // Check for acknowledgment flag
       {
 	Packet_Put(command& 0x7F, parameter1, parameter2, parameter3);
-	return bFALSE;                                                         	//Flag an error after clearing acknowledgment bit
+	return bFALSE;                                                         	// Flag an error after clearing acknowledgment bit
       }
       else
-	return bFALSE;                                                         	//Flag an error
+      {
+	return bFALSE;                                                         	// Flag an error
+      }
       break;
   }
 }
@@ -379,54 +388,55 @@ static BOOL SpecialCommand_9(const uint8_t command, const uint8_t parameter1, co
 static BOOL TowerNumberCommand_B(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
 {
   switch(parameter1)
-  //Case 1 is for "Get" tower number
-  //Case 2 is for "Set" tower number
-  //Default is for unrecognised parameter1
   {
-    case 1:                                                                      //Get Tower number, note parameter 2 and 3 can be any value
-      if(parameter2==0 && parameter3 ==0)                                        //Valid Get Tower Number call
+    case 1:                                                                  	// Get Tower number, note parameter 2 and 3 can be any value
+      if(parameter2 == 0 && parameter3 == 0)                                  	// Valid Get Tower Number call
       {
-	if(command >> 7 == 1)                                                    //Check for acknowledgment flag
+	if(command >> 7 == 1)                                               	// Check for acknowledgment flag
 	{
-	  //get the tower number and send acknowledgment packet
 	  return (Packet_Put(0x7F & command, parameter1, 0xFF & stuID, stuID >> 8)
-	      && Packet_Put(command, parameter1, parameter2, parameter3));
+	      && Packet_Put(command, parameter1, parameter2, parameter3));	// Get the tower number and send acknowledgment packet
 	}
-	else                                                                     //Send Tower to PC Tower version message, no acknowledgment
+	else                                                               	// Send Tower to PC Tower version message, no acknowledgment
 	  return Packet_Put(command, parameter1, 0xFF & stuID, stuID >> 8);
       }
-      else//invalid Get Tower Number call
+      else									// Invalid Get Tower Number call
       {
 	if(command >> 7 == 1)
 	{
-	  Packet_Put(0x7F & command, parameter1, parameter2, parameter3);    	//Output acknowledgment packet with top bit cleared
-	  return bFALSE;                                                     	//Flag an error (invalid entry)
+	  Packet_Put(0x7F & command, parameter1, parameter2, parameter3);    	// Output acknowledgment packet with top bit cleared
+	  return bFALSE;                                                     	// Flag an error (invalid entry)
 	}
-	else                                                                   	//No acknowledgment
-	  return bFALSE;                                                         //Flag an error (invalid entry)
+	else                                                                   	// No acknowledgment
+	{
+	  return bFALSE;                                                    	// Flag an error (invalid entry)
+	}
       }
       break;
 
-    case 2:                                                               	//Set tower number, note parameter 2 and 3 can be any value
-      stuID = (parameter3<<8) | parameter2;                            		//noted parameter2 is LSB, parameter3 is MSB, value stored
-      // for future call to getTower
-      if(command >> 7 == 1)                                                  	//check for acknowledgment flag
+    case 2:                                                               	// Set tower number, note parameter 2 and 3 can be any value
+      stuID = (parameter3<<8) | parameter2;                            		// Noted parameter2 is LSB, parameter3 is MSB, value stored
+      if(command >> 7 == 1)                                                  	// Check for acknowledgment flag
       {
-	return (Packet_Put(0x7F & command, 1, parameter2, parameter3) &&
-	    Packet_Put(command, parameter1, parameter2, parameter3));       	//Set tower number via Tower to PC communications, send acknowledgment packet
+	return (Packet_Put(0x7F & command, 1, parameter2, parameter3)
+	  && Packet_Put(command, parameter1, parameter2, parameter3));       	// Set tower number via Tower to PC communications, send acknowledgment packet
       }
       else
-	return Packet_Put(command, 1, parameter2, parameter3);                 	//Set tower number via Tower to PC communications, no acknowledgment packet
+      {
+	return Packet_Put(command, 1, parameter2, parameter3);                 	// Set tower number via Tower to PC communications, no acknowledgment packet
+      }
       break;
 
-    default:                                                                	 //leaves room for other Special commands, invalid parameters lie here
-      if(command >> 7 == 1)                                                      //check for acknowledgment flag
+    default:                                                            	// Leaves room for other Special commands, invalid parameters lie here
+      if(command >> 7 == 1)                                                 	// Check for acknowledgment flag
       {
 	Packet_Put(command, 1, parameter2, parameter3);
-	return bFALSE;                                                       	//Flag an error after providing acknowledgment packet with cleared bit 7 of command
+	return bFALSE;                                                       	// Flag an error after providing acknowledgment packet with cleared bit 7 of command
       }
       else
-	return bFALSE;                                                       	//Flag an error
+      {
+	return bFALSE;                                                       	// Flag an error
+      }
   }
 }
 
@@ -439,36 +449,37 @@ static BOOL TowerNumberCommand_B(const uint8_t command, const uint8_t parameter1
  */
 static BOOL TowerModeCommand_D(const uint8_t command, const uint8_t parameter1, const uint8_t parameter2, const uint8_t parameter3)
 {
-  BOOL invalidFlag=0;
-  BOOL successExec=0;
+  BOOL invalidFlag = 0;
+  BOOL successExec = 0;
   switch(parameter1)
   {
-    case 1:									//Get tower mode
+    case 1:									// Get tower mode
       successExec=Packet_Put(0x7F&command, parameter1, 0xFF & tMode, tMode>>8);
       break;
-    case 2:									//Set tower mode
-      tMode=(parameter3<<8) | parameter2;                            		//noted parameter2 is LSB, parameter3 is MSB, value stored
-      successExec=1;
+    case 2:									// Set tower mode
+      tMode=(parameter3<<8) | parameter2;                            		// Noted parameter2 is LSB, parameter3 is MSB, value stored
+      successExec = 1;
       break;
     default:
       invalidFlag=1;
   }
 
-  if(command >> 7 == 1)								//Acknowledgment flag exists
+  if(command >> 7 == 1)								// Acknowledgment flag exists
   {
-    if (invalidFlag==1)
+    if (invalidFlag == 1)
       return bFALSE;
-    return Packet_Put(command, parameter1, 0xFF & tMode, tMode >> 8);		//leave ACK bit high to indicate success
+    return Packet_Put(command, parameter1, 0xFF & tMode, tMode >> 8);		// Leave ACK bit high to indicate success
   }
-  else										//No acknowledgment required
+  else										// No acknowledgment required
   {
     if (invalidFlag = 1)
+    {
       return bFALSE;
+    }
     return bTRUE;
   }
 }
 
-/* END main */
 /*!
 ** @}
 */

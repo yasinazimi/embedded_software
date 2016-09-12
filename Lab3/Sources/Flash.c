@@ -141,6 +141,9 @@ BOOL Flash_Write32(volatile uint32_t* const address, const uint32_t data)
     return WritePhrase(address32bit-4, (uint64_t)phrase.l);
   }
   else
+  {
+    //
+  }
   //debug alignment error
   return bFALSE;
 }
@@ -162,6 +165,9 @@ BOOL Flash_Write16(volatile uint16_t* const address, const uint16_t data)
     return Flash_Write32(&_FW(address32bit-2),word.l);
   }
   else
+  {
+    //
+  }
   //debug alignment error
   return bFALSE;
 }
@@ -220,7 +226,9 @@ BOOL Flash_AllocateVar(volatile void** variable, uint8_t size)
       // Ensure if statement below does not over each array size
       while(memMapIndex<MAX_BYTES-1)
       {
-	if ((memMap[memMapIndex]==bFALSE) && (memMap[memMapIndex+1]==bFALSE) && (memMapIndex % 2 == 0))
+	if ((memMap[memMapIndex]==bFALSE)
+	  && (memMap[memMapIndex+1]==bFALSE)
+	  && (memMapIndex % 2 == 0))
 	{
 	  // Assign address of flash write commence to variable
 	  *(volatile uint16_t**)variable=&_FH(FLASH_DATA_START+memMapIndex);
@@ -243,7 +251,11 @@ BOOL Flash_AllocateVar(volatile void** variable, uint8_t size)
     {
       while(memMapIndex<MAX_BYTES-3)
       {
-	if ((memMap[memMapIndex]==bFALSE) && (memMap[memMapIndex+1]==bFALSE) && (memMap[memMapIndex+2]==bFALSE) && (memMap[memMapIndex+3]==bFALSE) && (memMapIndex % 4 == 0))
+	if ((memMap[memMapIndex]==bFALSE)
+	  && (memMap[memMapIndex+1]==bFALSE)
+	  && (memMap[memMapIndex+2]==bFALSE)
+	  && (memMap[memMapIndex+3]==bFALSE)
+	  && (memMapIndex % 4 == 0))
 	{
 	  // Assign address of flash write commence to variable
 	  *(volatile uint32_t**)variable=&_FW(FLASH_DATA_START+memMapIndex);

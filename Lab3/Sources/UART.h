@@ -14,12 +14,10 @@
 #ifndef UART_H
 #define UART_H
 
-// new types
 #include "types.h"
 
 #include "FIFO.h"
 
-// Initialising FIFO
 TFIFO RxFIFO, TxFIFO;
 
 /*! @brief Sets up the UART interface before first use.
@@ -53,9 +51,9 @@ BOOL UART_OutChar(const uint8_t data);
  */
 void UART_Poll(void);
 
-/*! @brief Interrupt service routine for the UART.
- *
- *  @note Assumes the transmit and receive FIFOs have been initialized.
+/*! @brief Interrupt service routine for UART2
+ *  @return void
+ *  @note vectors.c updated
  */
 void __attribute__ ((interrupt)) UART_ISR(void);
 

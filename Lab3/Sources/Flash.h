@@ -11,7 +11,6 @@
  * @addtogroup Flash_module Flash module documentation
  * @{
 */
-
 #ifndef FLASH_H
 #define FLASH_H
 

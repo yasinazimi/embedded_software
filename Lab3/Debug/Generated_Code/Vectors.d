@@ -7,7 +7,13 @@ Generated_Code/Vectors.o: ../Generated_Code/Vectors.c \
  D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Generated_Code/PE_Types.h \
  D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Generated_Code/PE_Error.h \
  D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Generated_Code/PE_Const.h \
- D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Generated_Code/IO_Map.h
+ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Generated_Code/IO_Map.h \
+ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/UART.h \
+ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/types.h \
+ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/FIFO.h \
+ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/FTM.h \
+ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/RTC.h \
+ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/PIT.h
 
 ../Generated_Code/Cpu.h:
 
@@ -30,3 +36,15 @@ D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_softwa
 D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Generated_Code/PE_Const.h:
 
 D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Generated_Code/IO_Map.h:
+
+D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/UART.h:
+
+D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/types.h:
+
+D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/FIFO.h:
+
+D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/FTM.h:
+
+D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/RTC.h:
+
+D:/UTS/Year\ 3/Spring\ Semester/48434\ -\ Embedded\ Software/SVN/embedded_software/Lab3/Sources/PIT.h:

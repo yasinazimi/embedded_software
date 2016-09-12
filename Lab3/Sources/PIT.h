@@ -20,10 +20,10 @@
  *  @param moduleClk The module clock rate in Hz.
  *  @param userFunction is a pointer to a user callback function.
  *  @param userArguments is a pointer to the user arguments to use with the user callback function.
- *  @return bool - TRUE if the PIT was successfully initialized.
+ *  @return BOOL - TRUE if the PIT was successfully initialized.
  *  @note Assumes that moduleClk has a period which can be expressed as an integral number of nanoseconds.
  */
-bool PIT_Init(const uint32_t moduleClk, void (*userFunction)(void*), void* userArguments);
+BOOL PIT_Init(const uint32_t moduleClk, void (*userFunction)(void*), void* userArguments);
 
 /*! @brief Sets the value of the desired period of the PIT.
  *
@@ -32,13 +32,13 @@ bool PIT_Init(const uint32_t moduleClk, void (*userFunction)(void*), void* userA
  *                 FALSE if the PIT will use the new value after a trigger event.
  *  @note The function will enable the timer and interrupts for the PIT.
  */
-void PIT_Set(const uint32_t period, const bool restart);
+void PIT_Set(const uint32_t period, const BOOL restart);
 
 /*! @brief Enables or disables the PIT.
  *
  *  @param enable - TRUE if the PIT is to be enabled, FALSE if the PIT is to be disabled.
  */
-void PIT_Enable(const bool enable);
+void PIT_Enable(const BOOL enable);
 
 /*! @brief Interrupt service routine for the PIT.
  *
@@ -47,5 +47,9 @@ void PIT_Enable(const bool enable);
  *  @note Assumes the PIT has been initialized.
  */
 void __attribute__ ((interrupt)) PIT_ISR(void);
+
+/*!
+ * @}
+*/
 
 #endif

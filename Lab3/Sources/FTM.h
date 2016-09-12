@@ -2,7 +2,7 @@
  *
  *  @brief Routines for setting up the flexible timer module (FTM) on the TWR-K70F120M.
  *
- *  Implementation of functions for operating the flexible timer module (FTM).
+ *  This contains the functions for operating the flexible timer module (FTM).
  *
  *  @author Mohammad Yasin Azimi, Scott Williams
  *  @date 2016-09-20
@@ -57,9 +57,9 @@ typedef struct
 /*! @brief Sets up the FTM before first use.
  *
  *  Enables the FTM as a free running 16-bit counter.
- *  @return bool - TRUE if the FTM was successfully initialized.
+ *  @return BOOL - TRUE if the FTM was successfully initialized.
  */
-bool FTM_Init();
+BOOL FTM_Init();
 
 /*! @brief Sets up a timer channel.
  *
@@ -72,19 +72,19 @@ bool FTM_Init();
  *      inputDetection is the type of input capture detection.
  *    userFunction is a pointer to a user callback function.
  *    userArguments is a pointer to the user arguments to use with the user callback function.
- *  @return bool - TRUE if the timer was set up successfully.
+ *  @return BOOL - TRUE if the timer was set up successfully.
  *  @note Assumes the FTM has been initialized.
  */
-bool FTM_Set(const TFTMChannel* const aFTMChannel);
+BOOL FTM_Set(const TFTMChannel* const aFTMChannel);
 
 
 /*! @brief Starts a timer if set up for output compare.
  *
  *  @param aFTMChannel is a structure containing the parameters to be used in setting up the timer channel.
- *  @return bool - TRUE if the timer was started successfully.
+ *  @return BOOL - TRUE if the timer was started successfully.
  *  @note Assumes the FTM has been initialized.
  */
-bool FTM_StartTimer(const TFTMChannel* const aFTMChannel);
+BOOL FTM_StartTimer(const TFTMChannel* const aFTMChannel);
 
 
 /*! @brief Interrupt service routine for the FTM.
@@ -95,7 +95,7 @@ bool FTM_StartTimer(const TFTMChannel* const aFTMChannel);
 void __attribute__ ((interrupt)) FTM0_ISR(void);
 
 /*!
-** @}
+ * @}
 */
 
 #endif
