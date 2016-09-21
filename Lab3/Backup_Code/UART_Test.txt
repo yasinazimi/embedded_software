@@ -1,0 +1,16 @@
+void hackFlash()
+{
+  volatile uint8_t *a;
+  volatile uint16_t *b;
+  volatile uint32_t *c;
+  volatile uint8_t *d;
+  BOOL sA = Flash_AllocateVar(&a, 1);
+  BOOL sB = Flash_AllocateVar(&b, 2);
+  BOOL sC = Flash_AllocateVar(&c, 4);
+  BOOL sD = Flash_AllocateVar(&d, 1);
+
+  BOOL wA = Flash_Write8(a, 0x12);
+}
+
+ hackFlash();
+
