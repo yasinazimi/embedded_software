@@ -1,0 +1,68 @@
+\hypertarget{packet_8h}{}\section{E\+:/\+U\+T\+S/\+Year 3/\+Spring Semester/48434 -\/ Embedded Software/\+S\+V\+N/embedded\+\_\+software/\+Lab3/sources/packet.h File Reference}
+\label{packet_8h}\index{E\+:/\+U\+T\+S/\+Year 3/\+Spring Semester/48434 -\/ Embedded Software/\+S\+V\+N/embedded\+\_\+software/\+Lab3/sources/packet.\+h@{E\+:/\+U\+T\+S/\+Year 3/\+Spring Semester/48434 -\/ Embedded Software/\+S\+V\+N/embedded\+\_\+software/\+Lab3/sources/packet.\+h}}
+
+
+Routines to implement packet encoding and decoding for the serial port.  
+
+
+{\ttfamily \#include \char`\"{}types.\+h\char`\"{}}\\*
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct_t_packet}{T\+Packet}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{types_8h_a3e5b8192e7d9ffaf3542f1210aec18dd}{B\+O\+O\+L} \hyperlink{group___packet__module_gaba27caca573c81c3160866cfdc03d6c9}{Packet\+\_\+\+Init} (const uint32\+\_\+t baud\+Rate, const uint32\+\_\+t module\+Clk)
+\begin{DoxyCompactList}\small\item\em Initializes the packets by calling the initialization routines of the supporting software modules. \end{DoxyCompactList}\item 
+\hyperlink{types_8h_a3e5b8192e7d9ffaf3542f1210aec18dd}{B\+O\+O\+L} \hyperlink{group___packet__module_ga0864b60176a8caa5e5b20e8b0e6dcbd3}{Packet\+\_\+\+Get} (void)
+\begin{DoxyCompactList}\small\item\em Attempts to get a packet from the received data. \end{DoxyCompactList}\item 
+\hyperlink{types_8h_a3e5b8192e7d9ffaf3542f1210aec18dd}{B\+O\+O\+L} \hyperlink{group___packet__module_ga248c4a5c53ef328f89e26ee5cb3b9131}{Packet\+\_\+\+Put} (const uint8\+\_\+t command, const uint8\+\_\+t parameter1, const uint8\+\_\+t parameter2, const uint8\+\_\+t parameter3)
+\begin{DoxyCompactList}\small\item\em Builds a packet and places it in the transmit F\+I\+F\+O buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{packet_8h_ac74c1cf77ae5807a61baefd6df20201e}{}\hyperlink{struct_t_packet}{T\+Packet} {\bfseries Packet}\label{packet_8h_ac74c1cf77ae5807a61baefd6df20201e}
+
+\item 
+uint8\+\_\+t \hyperlink{packet_8h_a4438175c272ad3fa1735b4a59f874b09}{Packet\+\_\+\+Command}
+\item 
+uint8\+\_\+t \hyperlink{packet_8h_a2cda772b5d1ad8079b8be383f98243fb}{Packet\+\_\+\+Parameter1}
+\item 
+uint8\+\_\+t \hyperlink{packet_8h_a799d070cdf6434b57ebce50a75d50b13}{Packet\+\_\+\+Parameter2}
+\item 
+uint8\+\_\+t \hyperlink{packet_8h_a568b6a8c6efff441c8497c205891374c}{Packet\+\_\+\+Parameter3}
+\item 
+\hypertarget{packet_8h_a5faca24c448374dc4656ebc31afcae0b}{}const uint8\+\_\+t {\bfseries P\+A\+C\+K\+E\+T\+\_\+\+A\+C\+K\+\_\+\+M\+A\+S\+K}\label{packet_8h_a5faca24c448374dc4656ebc31afcae0b}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Routines to implement packet encoding and decoding for the serial port. 
+
+This contains the functions for implementing the Tower to P\+C Protocol 5-\/byte packets.
+
+\begin{DoxyAuthor}{Author}
+P\+Mc\+L 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2016-\/09-\/20 
+\end{DoxyDate}
+
+
+\subsection{Variable Documentation}
+\hypertarget{packet_8h_a4438175c272ad3fa1735b4a59f874b09}{}\index{packet.\+h@{packet.\+h}!Packet\+\_\+\+Command@{Packet\+\_\+\+Command}}
+\index{Packet\+\_\+\+Command@{Packet\+\_\+\+Command}!packet.\+h@{packet.\+h}}
+\subsubsection[{Packet\+\_\+\+Command}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t Packet\+\_\+\+Command}\label{packet_8h_a4438175c272ad3fa1735b4a59f874b09}
+The packet\textquotesingle{}s command \hypertarget{packet_8h_a2cda772b5d1ad8079b8be383f98243fb}{}\index{packet.\+h@{packet.\+h}!Packet\+\_\+\+Parameter1@{Packet\+\_\+\+Parameter1}}
+\index{Packet\+\_\+\+Parameter1@{Packet\+\_\+\+Parameter1}!packet.\+h@{packet.\+h}}
+\subsubsection[{Packet\+\_\+\+Parameter1}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t Packet\+\_\+\+Parameter1}\label{packet_8h_a2cda772b5d1ad8079b8be383f98243fb}
+The packet\textquotesingle{}s 1st parameter \hypertarget{packet_8h_a799d070cdf6434b57ebce50a75d50b13}{}\index{packet.\+h@{packet.\+h}!Packet\+\_\+\+Parameter2@{Packet\+\_\+\+Parameter2}}
+\index{Packet\+\_\+\+Parameter2@{Packet\+\_\+\+Parameter2}!packet.\+h@{packet.\+h}}
+\subsubsection[{Packet\+\_\+\+Parameter2}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t Packet\+\_\+\+Parameter2}\label{packet_8h_a799d070cdf6434b57ebce50a75d50b13}
+The packet\textquotesingle{}s 2nd parameter \hypertarget{packet_8h_a568b6a8c6efff441c8497c205891374c}{}\index{packet.\+h@{packet.\+h}!Packet\+\_\+\+Parameter3@{Packet\+\_\+\+Parameter3}}
+\index{Packet\+\_\+\+Parameter3@{Packet\+\_\+\+Parameter3}!packet.\+h@{packet.\+h}}
+\subsubsection[{Packet\+\_\+\+Parameter3}]{\setlength{\rightskip}{0pt plus 5cm}uint8\+\_\+t Packet\+\_\+\+Parameter3}\label{packet_8h_a568b6a8c6efff441c8497c205891374c}
+The packet\textquotesingle{}s 3rdt parameter 

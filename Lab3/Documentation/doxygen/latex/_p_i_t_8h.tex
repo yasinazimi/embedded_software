@@ -1,0 +1,32 @@
+\hypertarget{_p_i_t_8h}{}\section{E\+:/\+U\+T\+S/\+Year 3/\+Spring Semester/48434 -\/ Embedded Software/\+S\+V\+N/embedded\+\_\+software/\+Lab3/sources/\+P\+I\+T.h File Reference}
+\label{_p_i_t_8h}\index{E\+:/\+U\+T\+S/\+Year 3/\+Spring Semester/48434 -\/ Embedded Software/\+S\+V\+N/embedded\+\_\+software/\+Lab3/sources/\+P\+I\+T.\+h@{E\+:/\+U\+T\+S/\+Year 3/\+Spring Semester/48434 -\/ Embedded Software/\+S\+V\+N/embedded\+\_\+software/\+Lab3/sources/\+P\+I\+T.\+h}}
+
+
+Routines for controlling Periodic Interrupt Timer (P\+I\+T) on the T\+W\+R-\/\+K70\+F120\+M.  
+
+
+{\ttfamily \#include \char`\"{}types.\+h\char`\"{}}\\*
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{types_8h_a3e5b8192e7d9ffaf3542f1210aec18dd}{B\+O\+O\+L} \hyperlink{group___p_i_t__module_ga324fde178f3d126aa0d9edfc1cde998c}{P\+I\+T\+\_\+\+Init} (const uint32\+\_\+t module\+Clk, void($\ast$user\+Function)(void $\ast$), void $\ast$user\+Arguments)
+\begin{DoxyCompactList}\small\item\em Sets up the P\+I\+T before first use. \end{DoxyCompactList}\item 
+void \hyperlink{group___p_i_t__module_ga7215d2d552020338339fa5b0436989ce}{P\+I\+T\+\_\+\+Set} (const uint32\+\_\+t period, const \hyperlink{types_8h_a3e5b8192e7d9ffaf3542f1210aec18dd}{B\+O\+O\+L} restart)
+\begin{DoxyCompactList}\small\item\em Sets the value of the desired period of the P\+I\+T. \end{DoxyCompactList}\item 
+void \hyperlink{group___p_i_t__module_ga656354c3316748827c2a4629d3e056de}{P\+I\+T\+\_\+\+Enable} (const \hyperlink{types_8h_a3e5b8192e7d9ffaf3542f1210aec18dd}{B\+O\+O\+L} enable)
+\begin{DoxyCompactList}\small\item\em Enables or disables the P\+I\+T. \end{DoxyCompactList}\item 
+void \hyperlink{group___timer__module_ga445500277ba0e363873b34cffc015745}{\+\_\+\+\_\+attribute\+\_\+\+\_\+} ((interrupt)) P\+I\+T\+\_\+\+I\+S\+R(void)
+\begin{DoxyCompactList}\small\item\em Interrupt service routine for the P\+I\+T. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Routines for controlling Periodic Interrupt Timer (P\+I\+T) on the T\+W\+R-\/\+K70\+F120\+M. 
+
+This contains the functions for operating the periodic interrupt timer (P\+I\+T).
+
+\begin{DoxyAuthor}{Author}
+P\+Mc\+L 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2016-\/09-\/20 
+\end{DoxyDate}
